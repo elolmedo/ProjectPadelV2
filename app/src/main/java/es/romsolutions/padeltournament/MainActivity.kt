@@ -1,0 +1,269 @@
+package es.romsolutions.padeltournament
+
+import android.os.Bundle
+import androidx.activity.ComponentActivity
+import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
+import androidx.activity.compose.BackHandler
+import androidx.activity.compose.setContent
+import androidx.activity.viewModels
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.*
+import androidx.compose.ui.Alignment
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material3.*
+import androidx.compose.material3.TabRowDefaults.tabIndicatorOffset
+import androidx.compose.runtime.*
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import androidx.compose.ui.res.stringResource
+import es.romsolutions.padeltournament.data.database.AppDatabase
+import es.romsolutions.padeltournament.data.model.League
+import es.romsolutions.padeltournament.data.model.Tournament
+import es.romsolutions.padeltournament.data.repository.LeagueRepository
+import es.romsolutions.padeltournament.data.repository.PlayerRepository
+import es.romsolutions.padeltournament.data.repository.TournamentRepository
+import es.romsolutions.padeltournament.ui.components.*
+import es.romsolutions.padeltournament.ui.screens.*
+import es.romsolutions.padeltournament.ui.theme.ProjectPadelTheme
+import es.romsolutions.padeltournament.ui.viewmodel.*
+
+class MainActivity : ComponentActivity() {
+    private val database by lazy { AppDatabase.getDatabase(this) }
+    private val playerRepository by lazy { PlayerRepository(database.playerDao()) }
+    private val tournamentRepository by lazy { TournamentRepository(database.tournamentDao(), database.matchDao()) }
+    private val leagueRepository by lazy { LeagueRepository(database.leagueDao(), database.rankingDao(), database.matchDao(), database.teamDao()) }
+    
+    private val playerViewModel: PlayerViewModel by viewModels { PlayerViewModelFactory(playerRepository) }
+    private val leagueViewModel: LeagueViewModel by viewModels { LeagueViewModelFactory(leagueRepository) }
+    private val tournamentViewModel: TournamentViewModel by viewModels { TournamentViewModelFactory(tournamentRepository, leagueRepository) }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        installSplashScreen()
+        super.onCreate(savedInstanceState)
+        setContent {
+            ProjectPadelTheme {
+                Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
+                    var currentScreen by remember { mutableStateOf("Main") }
+                    var selectedLeagueId by remember { mutableStateOf<Int?>(null) }
+                    var selectedTournamentId by remember { mutableStateOf<Int?>(null) }
+                    var isProUser by remember { mutableStateOf(false) }
+                    
+                    BackHandler(enabled = currentScreen != "Main") { currentScreen = "Main" }
+
+                    if (currentScreen == "Main") {
+                        MainScreen(
+                            playerViewModel, leagueViewModel, tournamentViewModel,
+                            isPro = isProUser,
+                            onTogglePro = { isProUser = !isProUser },
+                            onNavigateToMatches = { leagueId ->
+                                selectedLeagueId = leagueId
+                                selectedTournamentId = null
+                                currentScreen = "Matches" 
+                            },
+                            onNavigateToTournamentMatches = { tournamentId ->
+                                selectedTournamentId = tournamentId
+                                selectedLeagueId = null
+                                currentScreen = "Matches"
+                            }
+                        )
+                    } else {
+                        MatchesScreen(
+                            leagueViewModel = leagueViewModel,
+                            tournamentViewModel = tournamentViewModel,
+                            playerViewModel = playerViewModel,
+                            initialLeagueId = selectedLeagueId,
+                            initialTournamentId = selectedTournamentId,
+                            onBack = { currentScreen = "Main" }
+                        )
+                    }
+                }
+            }
+        }
+    }
+}
+
+@Composable
+fun MainScreen(
+    playerViewModel: PlayerViewModel, 
+    leagueViewModel: LeagueViewModel,
+    tournamentViewModel: TournamentViewModel,
+    isPro: Boolean,
+    onTogglePro: () -> Unit,
+    onNavigateToMatches: (Int?) -> Unit,
+    onNavigateToTournamentMatches: (Int?) -> Unit
+) {
+    var selectedTabIndex by remember { mutableIntStateOf(0) }
+    val tabs = listOf(
+        stringResource(R.string.tab_tournaments),
+        stringResource(R.string.tab_leagues),
+        stringResource(R.string.tab_players),
+        stringResource(R.string.tab_ranking)
+    )
+    
+    var showAddPlayerDialog by remember { mutableStateOf(false) }
+    var showAddLeagueDialog by remember { mutableStateOf(false) }
+    var showAddTournamentDialog by remember { mutableStateOf(false) }
+    var showProDialog by remember { mutableStateOf(false) }
+    
+    var preselectedPlayerIds by remember { mutableStateOf<List<Int>>(emptyList()) }
+
+    val players by playerViewModel.allPlayers.collectAsState()
+    val leagues by leagueViewModel.allLeagues.collectAsState()
+    val tournaments by tournamentViewModel.allTournaments.collectAsState()
+
+    if (showProDialog) {
+        AlertDialog(
+            onDismissRequest = { showProDialog = false },
+            title = { Text(stringResource(R.string.pro_version)) },
+            text = { Text(stringResource(R.string.pro_limit_reached)) },
+            confirmButton = { Button(onClick = { onTogglePro(); showProDialog = false }) { Text(stringResource(R.string.subscribe)) } },
+            dismissButton = { TextButton(onClick = { showProDialog = false }) { Text(stringResource(R.string.later)) } }
+        )
+    }
+
+    Scaffold(
+        floatingActionButton = {
+            if (selectedTabIndex <= 2) {
+                FloatingActionButton(
+                    onClick = {
+                        when (selectedTabIndex) {
+                            0 -> {
+                                if (!isPro && (leagues.size + tournaments.size >= 2)) showProDialog = true
+                                else showAddTournamentDialog = true
+                            }
+                            1 -> {
+                                if (!isPro && (leagues.size + tournaments.size >= 2)) showProDialog = true
+                                else showAddLeagueDialog = true
+                            }
+                            2 -> {
+                                if (!isPro && players.size >= 10) showProDialog = true
+                                else showAddPlayerDialog = true
+                            }
+                        }
+                    },
+                    containerColor = MaterialTheme.colorScheme.primary,
+                    contentColor = MaterialTheme.colorScheme.onPrimary
+                ) { Icon(Icons.Default.Add, contentDescription = stringResource(R.string.add)) }
+            }
+        }
+    ) { paddingValues ->
+        Column(modifier = Modifier.fillMaxSize().padding(paddingValues)) {
+            Row(
+                modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 20.dp),
+                horizontalArrangement = Arrangement.Center,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    text = stringResource(R.string.app_name),
+                    style = MaterialTheme.typography.headlineLarge.copy(fontWeight = FontWeight.ExtraBold, fontSize = 28.sp),
+                    color = MaterialTheme.colorScheme.primary,
+                    modifier = Modifier.clickable { onTogglePro() }
+                )
+                if (isPro) {
+                    Spacer(Modifier.width(8.dp))
+                    Surface(
+                        color = MaterialTheme.colorScheme.tertiary,
+                        shape = MaterialTheme.shapes.small
+                    ) {
+                        Text(
+                            "PRO", 
+                            modifier = Modifier.padding(horizontal = 4.dp, vertical = 2.dp),
+                            style = MaterialTheme.typography.labelSmall,
+                            color = MaterialTheme.colorScheme.onTertiary,
+                            fontWeight = FontWeight.Bold
+                        )
+                    }
+                }
+            }
+
+            TabRow(
+                selectedTabIndex = selectedTabIndex,
+                containerColor = MaterialTheme.colorScheme.background,
+                contentColor = MaterialTheme.colorScheme.primary,
+                indicator = { tabPositions ->
+                    TabRowDefaults.Indicator(
+                        Modifier.tabIndicatorOffset(tabPositions[selectedTabIndex]),
+                        height = 3.dp,
+                        color = MaterialTheme.colorScheme.primary
+                    )
+                },
+                divider = {}
+            ) {
+                tabs.forEachIndexed { index, title ->
+                    Tab(
+                        selected = selectedTabIndex == index,
+                        onClick = { selectedTabIndex = index },
+                        text = { 
+                            Text(
+                                text = title, 
+                                style = MaterialTheme.typography.titleSmall,
+                                fontWeight = if (selectedTabIndex == index) FontWeight.Bold else FontWeight.Normal
+                            ) 
+                        }
+                    )
+                }
+            }
+
+            Column(modifier = Modifier.fillMaxSize().padding(16.dp)) {
+                when (selectedTabIndex) {
+                    0 -> TournamentsListScreen(tournamentViewModel, playerViewModel, onTournamentStarted = onNavigateToTournamentMatches)
+                    1 -> LeaguesListScreen(leagueViewModel, playerViewModel, onLeagueStarted = onNavigateToMatches)
+                    2 -> PlayersListScreen(
+                        viewModel = playerViewModel,
+                        onNavigateToCreateLeague = { ids -> 
+                            if (!isPro && (leagues.size + tournaments.size >= 2)) showProDialog = true
+                            else {
+                                preselectedPlayerIds = ids
+                                showAddLeagueDialog = true 
+                            }
+                        },
+                        onNavigateToCreateTournament = { ids -> 
+                            if (!isPro && (leagues.size + tournaments.size >= 2)) showProDialog = true
+                            else {
+                                preselectedPlayerIds = ids
+                                showAddTournamentDialog = true 
+                            }
+                        }
+                    )
+                    3 -> RankingListScreen(leagueViewModel, tournamentViewModel, playerViewModel)
+                }
+            }
+        }
+    }
+
+    if (showAddPlayerDialog) {
+        AddPlayerDialog(onDismiss = { showAddPlayerDialog = false }, onSave = { playerViewModel.insert(it); showAddPlayerDialog = false })
+    }
+    if (showAddLeagueDialog) {
+        AddLeagueDialog(
+            playerViewModel = playerViewModel,
+            initialPlayerIds = preselectedPlayerIds,
+            onDismiss = { showAddLeagueDialog = false; preselectedPlayerIds = emptyList() },
+            onSave = { league, ids -> 
+                leagueViewModel.insertLeagueWithPlayers(league, ids)
+                showAddLeagueDialog = false
+                preselectedPlayerIds = emptyList()
+            }
+        )
+    }
+    if (showAddTournamentDialog) {
+        AddTournamentDialog(
+            playerViewModel = playerViewModel,
+            initialPlayerIds = preselectedPlayerIds,
+            onDismiss = { showAddTournamentDialog = false; preselectedPlayerIds = emptyList() },
+            onSave = { tournament, ids ->
+                tournamentViewModel.insertTournamentWithPlayers(tournament, ids)
+                showAddTournamentDialog = false
+                preselectedPlayerIds = emptyList()
+            }
+        )
+    }
+}

@@ -1,0 +1,54 @@
+<resources>
+    <string name="app_name">PADEL PRO</string>
+    <string name="tab_tournaments">Torneos</string>
+    <string name="tab_leagues">Ligas</string>
+    <string name="tab_players">Jugadores</string>
+    <string name="tab_ranking">Ranking</string>
+
+    <string name="add">Añadir</string>
+    <string name="edit">Editar</string>
+    <string name="delete">Eliminar</string>
+    <string name="save">Guardar</string>
+    <string name="cancel">Cancelar</string>
+    <string name="confirm">Confirmar</string>
+    <string name="finish">Finalizar</string>
+    <string name="back">Volver</string>
+    <string name="start">Iniciar</string>
+    <string name="next">Siguiente</string>
+
+    <string name="pro_version">Versión Premium</string>
+    <string name="pro_limit_reached">Has alcanzado el límite de la versión gratuita. ¡Pásate a PRO para crear jugadores y torneos ilimitados!</string>
+    <string name="subscribe">Subscribirse</string>
+    <string name="later">Más tarde</string>
+
+    <string name="status_in_progress">EN CURSO</string>
+    <string name="status_finished">FINALIZADO</string>
+    <string name="status_pending">PENDIENTE</string>
+
+    <string name="courts">Pistas</string>
+    <string name="start_time">Hora de Inicio</string>
+    <string name="start_date">Fecha de Inicio</string>
+    <string name="name">Nombre</string>
+    <string name="phone">Teléfono</string>
+    <string name="email">Email</string>
+
+    <string name="new_league">Nueva Liga</string>
+    <string name="new_tournament">Nuevo Torneo</string>
+    <string name="new_player">Nuevo Jugador</string>
+
+    <string name="weekly_matches">Partidos semanales</string>
+    <string name="match_duration">Duración (min)</string>
+    <string name="num_sets">Número de Sets</string>
+
+    <string name="empty_players">No hay jugadores.</string>
+    <string name="empty_leagues">No hay ligas creadas.</string>
+    <string name="empty_tournaments">No hay torneos creados.</string>
+    <string name="empty_matches">No hay partidos programados.</string>
+
+    <string name="filter_all">Todos</string>
+    <string name="filter_week">Semana</string>
+    <string name="filter_round">Jornada</string>
+
+    <string name="simulate_results">Simular Resultados</string>
+    <string name="update_score">Actualizar Marcador</string>
+</resources>

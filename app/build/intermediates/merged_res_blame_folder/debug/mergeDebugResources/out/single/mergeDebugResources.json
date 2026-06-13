@@ -1,0 +1,22 @@
+[
+    {
+        "merged": "es.romsolutions.padeltournament.app-debug-50:/drawable_splash_logo.png.flat",
+        "source": "es.romsolutions.padeltournament.app-main-52:/drawable/splash_logo.png"
+    },
+    {
+        "merged": "es.romsolutions.padeltournament.app-debug-50:/drawable_ic_launcher_foreground.xml.flat",
+        "source": "es.romsolutions.padeltournament.app-main-52:/drawable/ic_launcher_foreground.xml"
+    },
+    {
+        "merged": "es.romsolutions.padeltournament.app-debug-50:/drawable-nodpi_splash_logo.png.flat",
+        "source": "es.romsolutions.padeltournament.app-main-52:/drawable-nodpi/splash_logo.png"
+    },
+    {
+        "merged": "es.romsolutions.padeltournament.app-debug-50:/drawable_ic_launcher_background.xml.flat",
+        "source": "es.romsolutions.padeltournament.app-main-52:/drawable/ic_launcher_background.xml"
+    },
+    {
+        "merged": "es.romsolutions.padeltournament.app-debug-50:/mipmap-anydpi-v26_ic_launcher.xml.flat",
+        "source": "es.romsolutions.padeltournament.app-main-52:/mipmap-anydpi-v26/ic_launcher.xml"
+    }
+]

@@ -1,0 +1,20 @@
+{
+    "logs": [
+        {
+            "outputFile": "es.romsolutions.padeltournament.app-mergeDebugResources-48:/values-v29/values-v29.xml",
+            "map": [
+                {
+                    "source": "/home/romark/.gradle/caches/8.13/transforms/4ed58aba43db3436c85a1ad7540bc253/transformed/core-splashscreen-1.0.1/res/values-v29/values-v29.xml",
+                    "from": {
+                        "startLines": "2,7",
+                        "startColumns": "4,4",
+                        "startOffsets": "55,374",
+                        "endLines": "6,8",
+                        "endColumns": "12,12",
+                        "endOffsets": "369,464"
+                    }
+                }
+            ]
+        }
+    ]
+}

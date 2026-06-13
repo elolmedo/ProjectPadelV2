@@ -1,0 +1,54 @@
+<resources>
+    <string name="app_name">PADEL PRO</string>
+    <string name="tab_tournaments">Tornejos</string>
+    <string name="tab_leagues">Lligues</string>
+    <string name="tab_players">Jugadors</string>
+    <string name="tab_ranking">Rànquing</string>
+
+    <string name="add">Afegir</string>
+    <string name="edit">Editar</string>
+    <string name="delete">Eliminar</string>
+    <string name="save">Desar</string>
+    <string name="cancel">Cancel·lar</string>
+    <string name="confirm">Confirmar</string>
+    <string name="finish">Finalitzar</string>
+    <string name="back">Tornar</string>
+    <string name="start">Iniciar</string>
+    <string name="next">Següent</string>
+
+    <string name="pro_version">Versió Premium</string>
+    <string name="pro_limit_reached">Has assolit el límit de la versió gratuïta. Passa\'t a PRO per crear jugadors i tornejos il·limitats!</string>
+    <string name="subscribe">Subscriure\'s</string>
+    <string name="later">Més tard</string>
+
+    <string name="status_in_progress">EN CURS</string>
+    <string name="status_finished">FINALITZAT</string>
+    <string name="status_pending">PENDENT</string>
+
+    <string name="courts">Pistes</string>
+    <string name="start_time">Hora d\'Inici</string>
+    <string name="start_date">Data d\'Inici</string>
+    <string name="name">Nom</string>
+    <string name="phone">Telèfon</string>
+    <string name="email">Correu</string>
+
+    <string name="new_league">Nova Lliga</string>
+    <string name="new_tournament">Nou Torneig</string>
+    <string name="new_player">Nou Jugador</string>
+
+    <string name="weekly_matches">Partits setmanals</string>
+    <string name="match_duration">Durada (min)</string>
+    <string name="num_sets">Nombre de Sets</string>
+
+    <string name="empty_players">No hi ha jugadors.</string>
+    <string name="empty_leagues">No hi ha lligues creades.</string>
+    <string name="empty_tournaments">No hi ha tornejos creats.</string>
+    <string name="empty_matches">No hi ha partits programats.</string>
+
+    <string name="filter_all">Tots</string>
+    <string name="filter_week">Setmana</string>
+    <string name="filter_round">Jornada</string>
+
+    <string name="simulate_results">Simular Resultats</string>
+    <string name="update_score">Actualitzar Marcador</string>
+</resources>

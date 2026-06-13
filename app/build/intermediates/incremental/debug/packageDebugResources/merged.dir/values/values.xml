@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="background">#1A1C1E</color>
+    <color name="black">#FF000000</color>
+    <color name="padel_green">#C5FF1A</color>
+    <color name="purple_200">#FFBB86FC</color>
+    <color name="purple_500">#FF6200EE</color>
+    <color name="purple_700">#FF3700B3</color>
+    <color name="teal_200">#FF03DAC5</color>
+    <color name="teal_700">#FF018786</color>
+    <color name="white">#FFFFFFFF</color>
+    <string name="add">Añadir</string>
+    <string name="app_name">PADEL PRO</string>
+    <string name="back">Volver</string>
+    <string name="cancel">Cancelar</string>
+    <string name="confirm">Confirmar</string>
+    <string name="courts">Pistas</string>
+    <string name="delete">Eliminar</string>
+    <string name="edit">Editar</string>
+    <string name="email">Email</string>
+    <string name="empty_leagues">No hay ligas creadas.</string>
+    <string name="empty_matches">No hay partidos programados.</string>
+    <string name="empty_players">No hay jugadores.</string>
+    <string name="empty_tournaments">No hay torneos creados.</string>
+    <string name="filter_all">Todos</string>
+    <string name="filter_round">Jornada</string>
+    <string name="filter_week">Semana</string>
+    <string name="finish">Finalizar</string>
+    <string name="later">Más tarde</string>
+    <string name="match_duration">Duración (min)</string>
+    <string name="name">Nombre</string>
+    <string name="new_league">Nueva Liga</string>
+    <string name="new_player">Nuevo Jugador</string>
+    <string name="new_tournament">Nuevo Torneo</string>
+    <string name="next">Siguiente</string>
+    <string name="num_sets">Número de Sets</string>
+    <string name="phone">Teléfono</string>
+    <string name="pro_limit_reached">Has alcanzado el límite de la versión gratuita. ¡Pásate a PRO para crear jugadores y torneos ilimitados!</string>
+    <string name="pro_version">Versión Premium</string>
+    <string name="save">Guardar</string>
+    <string name="simulate_results">Simular Resultados</string>
+    <string name="start">Iniciar</string>
+    <string name="start_date">Fecha de Inicio</string>
+    <string name="start_time">Hora de Inicio</string>
+    <string name="status_finished">FINALIZADO</string>
+    <string name="status_in_progress">EN CURSO</string>
+    <string name="status_pending">PENDIENTE</string>
+    <string name="subscribe">Subscribirse</string>
+    <string name="tab_leagues">Ligas</string>
+    <string name="tab_players">Jugadores</string>
+    <string name="tab_ranking">Ranking</string>
+    <string name="tab_tournaments">Torneos</string>
+    <string name="update_score">Actualizar Marcador</string>
+    <string name="weekly_matches">Partidos semanales</string>
+    <style name="Theme.App.Starting" parent="Theme.SplashScreen">
+        <item name="windowSplashScreenBackground">#1A1C1E</item>
+        
+        <item name="windowSplashScreenAnimatedIcon">@drawable/splash_logo</item>
+        <item name="postSplashScreenTheme">@style/Theme.ProjectPadel</item>
+    </style>
+    <style name="Theme.ProjectPadel" parent="android:Theme.Material.Light.NoActionBar">
+        <item name="android:windowBackground">@color/background</item>
+        <item name="android:statusBarColor">@color/background</item>
+    </style>
+</resources>
