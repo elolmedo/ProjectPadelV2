@@ -51,4 +51,11 @@
 
     <string name="simulate_results">Resultaten simuleren</string>
     <string name="update_score">Score bijwerken</string>
+
+    <string name="reset_general_ranking">Algemeen Resetten</string>
+    <string name="reset_ranking_confirm">Wilt u de GEHELE algemene ranglijst resetten? Alle verzamelde punten worden verwijderd.</string>
+    <string name="format">Formaat</string>
+    <string name="rotation">Rotatie</string>
+    <string name="fixed_teams">Vaste Teams</string>
+    <string name="setup_teams">Teams Instellen</string>
 </resources>

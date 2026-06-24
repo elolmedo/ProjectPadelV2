@@ -2,10 +2,11 @@ R_DEF: Internal format may change without notice
 local
 color background
 color black
-color padel_green
+color padel_lime
 color purple_200
 color purple_500
 color purple_700
+color splash_background
 color teal_200
 color teal_700
 color white
@@ -17,8 +18,11 @@ string add
 string app_name
 string back
 string cancel
+string com.google.firebase.crashlytics.mapping_file_id
+string com.google.firebase.crashlytics.version_control_info
 string confirm
 string courts
+string default_web_client_id
 string delete
 string edit
 string email
@@ -30,6 +34,13 @@ string filter_all
 string filter_round
 string filter_week
 string finish
+string fixed_teams
+string format
+string gcm_defaultSenderId
+string google_api_key
+string google_app_id
+string google_crash_reporting_api_key
+string google_storage_bucket
 string later
 string match_duration
 string name
@@ -41,7 +52,12 @@ string num_sets
 string phone
 string pro_limit_reached
 string pro_version
+string project_id
+string reset_general_ranking
+string reset_ranking_confirm
+string rotation
 string save
+string setup_teams
 string simulate_results
 string start
 string start_date

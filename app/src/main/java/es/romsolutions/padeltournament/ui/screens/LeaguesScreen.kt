@@ -17,6 +17,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.res.stringResource
 import es.romsolutions.padeltournament.R
 import es.romsolutions.padeltournament.data.model.League
+import es.romsolutions.padeltournament.data.model.TeamInput
 import es.romsolutions.padeltournament.ui.components.EmptyState
 import es.romsolutions.padeltournament.ui.components.StartLeagueDialog
 import es.romsolutions.padeltournament.ui.components.TeamSetupDialog
@@ -24,8 +25,6 @@ import es.romsolutions.padeltournament.ui.viewmodel.LeagueViewModel
 import es.romsolutions.padeltournament.ui.viewmodel.PlayerViewModel
 import java.text.SimpleDateFormat
 import java.util.*
-
-data class TeamInput(val name: String, val player1Id: Int, val player2Id: Int)
 
 @Composable
 fun LeaguesListScreen(

@@ -19,7 +19,8 @@ data class League(
     val matchDays: String = "", // Guardaremos los días como "1,3,5" (L,X,V)
     val isTeamBased: Boolean = true, // Flag para diferenciar el tipo de liga
     val isFinished: Boolean = false,
-    val numberCourts: Int = 1
+    val numberCourts: Int = 1,
+    val adminId: String? = null
 )
 
 @Entity(

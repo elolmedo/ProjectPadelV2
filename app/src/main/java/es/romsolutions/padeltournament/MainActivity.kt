@@ -24,6 +24,11 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.res.stringResource
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.layout.ContentScale
+import coil.compose.AsyncImage
+import androidx.compose.material.icons.filled.Person
 import es.romsolutions.padeltournament.data.database.AppDatabase
 import es.romsolutions.padeltournament.data.model.League
 import es.romsolutions.padeltournament.data.model.Tournament
@@ -34,6 +39,9 @@ import es.romsolutions.padeltournament.ui.components.*
 import es.romsolutions.padeltournament.ui.screens.*
 import es.romsolutions.padeltournament.ui.theme.ProjectPadelTheme
 import es.romsolutions.padeltournament.ui.viewmodel.*
+import es.romsolutions.padeltournament.auth.AuthManager
+import es.romsolutions.padeltournament.billing.BillingManager
+import kotlinx.coroutines.launch
 
 class MainActivity : ComponentActivity() {
     private val database by lazy { AppDatabase.getDatabase(this) }
@@ -43,46 +51,87 @@ class MainActivity : ComponentActivity() {
     
     private val playerViewModel: PlayerViewModel by viewModels { PlayerViewModelFactory(playerRepository) }
     private val leagueViewModel: LeagueViewModel by viewModels { LeagueViewModelFactory(leagueRepository) }
-    private val tournamentViewModel: TournamentViewModel by viewModels { TournamentViewModelFactory(tournamentRepository, leagueRepository) }
+    private val tournamentViewModel: TournamentViewModel by viewModels { TournamentViewModelFactory(tournamentRepository, leagueRepository, playerRepository) }
+
+    private lateinit var authManager: AuthManager
+    private lateinit var billingManager: BillingManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
         installSplashScreen()
         super.onCreate(savedInstanceState)
+        
+        authManager = AuthManager(this)
+        billingManager = BillingManager(this)
+
         setContent {
+            // Estado para observar si el usuario está logueado
+            var isLoggedIn by remember { mutableStateOf(authManager.isUserLoggedIn()) }
+            val isProUser by billingManager.isPro.collectAsState()
+            
+            LaunchedEffect(Unit) {
+                // Solo pedimos login si NO hay un usuario ya autenticado
+                if (!authManager.isUserLoggedIn()) {
+                    kotlinx.coroutines.delay(1000)
+                    val success = authManager.signInWithGoogle()
+                    if (success) {
+                        isLoggedIn = true
+                    }
+                }
+                
+                // Una vez que sabemos el estado del login, actualizamos los ViewModels
+                val currentAdminId = authManager.getCurrentUserId()
+                playerViewModel.setAdminId(currentAdminId)
+                leagueViewModel.setAdminId(currentAdminId)
+                tournamentViewModel.setAdminId(currentAdminId)
+            }
+
             ProjectPadelTheme {
                 Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
                     var currentScreen by remember { mutableStateOf("Main") }
                     var selectedLeagueId by remember { mutableStateOf<Int?>(null) }
                     var selectedTournamentId by remember { mutableStateOf<Int?>(null) }
-                    var isProUser by remember { mutableStateOf(false) }
                     
                     BackHandler(enabled = currentScreen != "Main") { currentScreen = "Main" }
 
-                    if (currentScreen == "Main") {
-                        MainScreen(
-                            playerViewModel, leagueViewModel, tournamentViewModel,
-                            isPro = isProUser,
-                            onTogglePro = { isProUser = !isProUser },
-                            onNavigateToMatches = { leagueId ->
-                                selectedLeagueId = leagueId
-                                selectedTournamentId = null
-                                currentScreen = "Matches" 
-                            },
-                            onNavigateToTournamentMatches = { tournamentId ->
-                                selectedTournamentId = tournamentId
-                                selectedLeagueId = null
-                                currentScreen = "Matches"
-                            }
-                        )
-                    } else {
-                        MatchesScreen(
-                            leagueViewModel = leagueViewModel,
-                            tournamentViewModel = tournamentViewModel,
-                            playerViewModel = playerViewModel,
-                            initialLeagueId = selectedLeagueId,
-                            initialTournamentId = selectedTournamentId,
-                            onBack = { currentScreen = "Main" }
-                        )
+                    when (currentScreen) {
+                        "Main" -> {
+                            MainScreen(
+                                playerViewModel, leagueViewModel, tournamentViewModel,
+                                authManager = authManager,
+                                isPro = isProUser,
+                                onTogglePro = { /* Ya no existe el truco */ },
+                                onNavigateToMatches = { leagueId ->
+                                    selectedLeagueId = leagueId
+                                    selectedTournamentId = null
+                                    currentScreen = "Matches" 
+                                },
+                                onNavigateToTournamentMatches = { tournamentId ->
+                                    selectedTournamentId = tournamentId
+                                    selectedLeagueId = null
+                                    currentScreen = "Matches"
+                                },
+                                onNavigateToProfile = {
+                                    currentScreen = "Profile"
+                                }
+                            )
+                        }
+                        "Matches" -> {
+                            MatchesScreen(
+                                leagueViewModel = leagueViewModel,
+                                tournamentViewModel = tournamentViewModel,
+                                playerViewModel = playerViewModel,
+                                initialLeagueId = selectedLeagueId,
+                                initialTournamentId = selectedTournamentId,
+                                onBack = { currentScreen = "Main" }
+                            )
+                        }
+                        "Profile" -> {
+                            ProfileScreen(
+                                authManager = authManager,
+                                billingManager = billingManager,
+                                onBack = { currentScreen = "Main" }
+                            )
+                        }
                     }
                 }
             }
@@ -95,10 +144,12 @@ fun MainScreen(
     playerViewModel: PlayerViewModel, 
     leagueViewModel: LeagueViewModel,
     tournamentViewModel: TournamentViewModel,
+    authManager: AuthManager,
     isPro: Boolean,
     onTogglePro: () -> Unit,
     onNavigateToMatches: (Int?) -> Unit,
-    onNavigateToTournamentMatches: (Int?) -> Unit
+    onNavigateToTournamentMatches: (Int?) -> Unit,
+    onNavigateToProfile: () -> Unit
 ) {
     var selectedTabIndex by remember { mutableIntStateOf(0) }
     val tabs = listOf(
@@ -131,27 +182,57 @@ fun MainScreen(
 
     Scaffold(
         floatingActionButton = {
-            if (selectedTabIndex <= 2) {
+            Box(modifier = Modifier.fillMaxSize()) {
+                // Icono de perfil abajo a la izquierda
                 FloatingActionButton(
-                    onClick = {
-                        when (selectedTabIndex) {
-                            0 -> {
-                                if (!isPro && (leagues.size + tournaments.size >= 2)) showProDialog = true
-                                else showAddTournamentDialog = true
+                    onClick = onNavigateToProfile,
+                    modifier = Modifier
+                        .align(Alignment.BottomStart)
+                        .padding(start = 32.dp, bottom = 16.dp),
+                    containerColor = MaterialTheme.colorScheme.secondaryContainer,
+                    contentColor = MaterialTheme.colorScheme.onSecondaryContainer
+                ) {
+                    val photoUrl = authManager.getCurrentUserPhotoUrl()
+                    if (photoUrl != null) {
+                        AsyncImage(
+                            model = photoUrl,
+                            contentDescription = "Perfil",
+                            modifier = Modifier
+                                .size(24.dp)
+                                .clip(CircleShape),
+                            contentScale = ContentScale.Crop
+                        )
+                    } else {
+                        Icon(Icons.Default.Person, contentDescription = "Perfil")
+                    }
+                }
+
+                // Botón añadir original a la derecha
+                if (selectedTabIndex <= 2) {
+                    FloatingActionButton(
+                        onClick = {
+                            when (selectedTabIndex) {
+                                0 -> {
+                                    if (!isPro && (leagues.size + tournaments.size >= 2)) showProDialog = true
+                                    else showAddTournamentDialog = true
+                                }
+                                1 -> {
+                                    if (!isPro && (leagues.size + tournaments.size >= 2)) showProDialog = true
+                                    else showAddLeagueDialog = true
+                                }
+                                2 -> {
+                                    if (!isPro && players.size >= 10) showProDialog = true
+                                    else showAddPlayerDialog = true
+                                }
                             }
-                            1 -> {
-                                if (!isPro && (leagues.size + tournaments.size >= 2)) showProDialog = true
-                                else showAddLeagueDialog = true
-                            }
-                            2 -> {
-                                if (!isPro && players.size >= 10) showProDialog = true
-                                else showAddPlayerDialog = true
-                            }
-                        }
-                    },
-                    containerColor = MaterialTheme.colorScheme.primary,
-                    contentColor = MaterialTheme.colorScheme.onPrimary
-                ) { Icon(Icons.Default.Add, contentDescription = stringResource(R.string.add)) }
+                        },
+                        modifier = Modifier
+                            .align(Alignment.BottomEnd)
+                            .padding(end = 16.dp, bottom = 16.dp),
+                        containerColor = MaterialTheme.colorScheme.primary,
+                        contentColor = MaterialTheme.colorScheme.onPrimary
+                    ) { Icon(Icons.Default.Add, contentDescription = stringResource(R.string.add)) }
+                }
             }
         }
     ) { paddingValues ->
@@ -240,11 +321,16 @@ fun MainScreen(
     }
 
     if (showAddPlayerDialog) {
-        AddPlayerDialog(onDismiss = { showAddPlayerDialog = false }, onSave = { playerViewModel.insert(it); showAddPlayerDialog = false })
+        AddPlayerDialog(
+            authManager = authManager,
+            onDismiss = { showAddPlayerDialog = false }, 
+            onSave = { playerViewModel.insert(it); showAddPlayerDialog = false }
+        )
     }
     if (showAddLeagueDialog) {
         AddLeagueDialog(
             playerViewModel = playerViewModel,
+            authManager = authManager,
             initialPlayerIds = preselectedPlayerIds,
             onDismiss = { showAddLeagueDialog = false; preselectedPlayerIds = emptyList() },
             onSave = { league, ids -> 
@@ -257,6 +343,7 @@ fun MainScreen(
     if (showAddTournamentDialog) {
         AddTournamentDialog(
             playerViewModel = playerViewModel,
+            authManager = authManager,
             initialPlayerIds = preselectedPlayerIds,
             onDismiss = { showAddTournamentDialog = false; preselectedPlayerIds = emptyList() },
             onSave = { tournament, ids ->

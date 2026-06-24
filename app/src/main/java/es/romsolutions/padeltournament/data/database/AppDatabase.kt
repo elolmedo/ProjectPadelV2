@@ -34,7 +34,7 @@ import kotlinx.coroutines.SupervisorJob
         Ranking::class,
         TournamentPlayerCrossRef::class
     ],
-    version = 24,
+    version = 28,
     exportSchema = false
 )
 abstract class AppDatabase : RoomDatabase() {

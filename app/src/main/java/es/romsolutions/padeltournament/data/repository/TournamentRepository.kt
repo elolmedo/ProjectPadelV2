@@ -10,7 +10,7 @@ class TournamentRepository(
     private val tournamentDao: TournamentDao,
     private val matchDao: MatchDao
 ) {
-    val allTournaments: Flow<List<Tournament>> = tournamentDao.getAllTournaments()
+    fun getTournamentsByAdmin(adminId: String?): Flow<List<Tournament>> = tournamentDao.getTournamentsByAdmin(adminId)
 
     suspend fun insert(tournament: Tournament) {
         tournamentDao.insert(tournament)
@@ -27,6 +27,10 @@ class TournamentRepository(
     suspend fun startTournamentWithMatches(tournament: Tournament, matches: List<Match>) {
         matchDao.insertAll(matches)
         tournamentDao.update(tournament)
+    }
+
+    suspend fun insertMatches(matches: List<Match>) {
+        matchDao.insertAll(matches)
     }
 
     suspend fun update(tournament: Tournament) {

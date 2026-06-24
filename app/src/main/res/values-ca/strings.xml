@@ -51,4 +51,11 @@
 
     <string name="simulate_results">Simular Resultats</string>
     <string name="update_score">Actualitzar Marcador</string>
+
+    <string name="reset_general_ranking">Reiniciar General</string>
+    <string name="reset_ranking_confirm">Vols reiniciar TOT el rànquing general? Se suprimiran tots els punts acumulats.</string>
+    <string name="format">Format</string>
+    <string name="rotation">Rotació</string>
+    <string name="fixed_teams">Parelles Fixes</string>
+    <string name="setup_teams">Configurar Parelles</string>
 </resources>

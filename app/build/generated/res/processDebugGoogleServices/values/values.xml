@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="default_web_client_id" translatable="false">416205523640-1i8fb36l4vodf56q0nuolt7hbqn4b11u.apps.googleusercontent.com</string>
+    <string name="gcm_defaultSenderId" translatable="false">416205523640</string>
+    <string name="google_api_key" translatable="false">AIzaSyCGXExLADOz0KK2acnen_lTueYwOXB5uWQ</string>
+    <string name="google_app_id" translatable="false">1:416205523640:android:ecb0442c517c677821424d</string>
+    <string name="google_crash_reporting_api_key" translatable="false">AIzaSyCGXExLADOz0KK2acnen_lTueYwOXB5uWQ</string>
+    <string name="google_storage_bucket" translatable="false">padel-pro-2a109.firebasestorage.app</string>
+    <string name="project_id" translatable="false">padel-pro-2a109</string>
+</resources>

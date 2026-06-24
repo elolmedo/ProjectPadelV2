@@ -50,7 +50,7 @@ public final class LeagueDao_Impl implements LeagueDao {
       @Override
       @NonNull
       protected String createQuery() {
-        return "INSERT OR REPLACE INTO `leagues` (`id`,`name`,`size`,`weeklyMatches`,`startDate`,`endDate`,`score`,`isStarted`,`matchDays`,`isTeamBased`,`isFinished`,`numberCourts`) VALUES (nullif(?, 0),?,?,?,?,?,?,?,?,?,?,?)";
+        return "INSERT OR REPLACE INTO `leagues` (`id`,`name`,`size`,`weeklyMatches`,`startDate`,`endDate`,`score`,`isStarted`,`matchDays`,`isTeamBased`,`isFinished`,`numberCourts`,`adminId`) VALUES (nullif(?, 0),?,?,?,?,?,?,?,?,?,?,?,?)";
       }
 
       @Override
@@ -71,6 +71,11 @@ public final class LeagueDao_Impl implements LeagueDao {
         final int _tmp_2 = entity.isFinished() ? 1 : 0;
         statement.bindLong(11, _tmp_2);
         statement.bindLong(12, entity.getNumberCourts());
+        if (entity.getAdminId() == null) {
+          statement.bindNull(13);
+        } else {
+          statement.bindString(13, entity.getAdminId());
+        }
       }
     };
     this.__insertionAdapterOfLeaguePlayerCrossRef = new EntityInsertionAdapter<LeaguePlayerCrossRef>(__db) {
@@ -104,7 +109,7 @@ public final class LeagueDao_Impl implements LeagueDao {
       @Override
       @NonNull
       protected String createQuery() {
-        return "UPDATE OR ABORT `leagues` SET `id` = ?,`name` = ?,`size` = ?,`weeklyMatches` = ?,`startDate` = ?,`endDate` = ?,`score` = ?,`isStarted` = ?,`matchDays` = ?,`isTeamBased` = ?,`isFinished` = ?,`numberCourts` = ? WHERE `id` = ?";
+        return "UPDATE OR ABORT `leagues` SET `id` = ?,`name` = ?,`size` = ?,`weeklyMatches` = ?,`startDate` = ?,`endDate` = ?,`score` = ?,`isStarted` = ?,`matchDays` = ?,`isTeamBased` = ?,`isFinished` = ?,`numberCourts` = ?,`adminId` = ? WHERE `id` = ?";
       }
 
       @Override
@@ -125,7 +130,12 @@ public final class LeagueDao_Impl implements LeagueDao {
         final int _tmp_2 = entity.isFinished() ? 1 : 0;
         statement.bindLong(11, _tmp_2);
         statement.bindLong(12, entity.getNumberCourts());
-        statement.bindLong(13, entity.getId());
+        if (entity.getAdminId() == null) {
+          statement.bindNull(13);
+        } else {
+          statement.bindString(13, entity.getAdminId());
+        }
+        statement.bindLong(14, entity.getId());
       }
     };
   }
@@ -210,9 +220,15 @@ public final class LeagueDao_Impl implements LeagueDao {
   }
 
   @Override
-  public Flow<List<League>> getAllLeagues() {
-    final String _sql = "SELECT * FROM leagues ORDER BY name ASC";
-    final RoomSQLiteQuery _statement = RoomSQLiteQuery.acquire(_sql, 0);
+  public Flow<List<League>> getLeaguesByAdmin(final String adminId) {
+    final String _sql = "SELECT * FROM leagues WHERE adminId = ? OR adminId IS NULL ORDER BY name ASC";
+    final RoomSQLiteQuery _statement = RoomSQLiteQuery.acquire(_sql, 1);
+    int _argIndex = 1;
+    if (adminId == null) {
+      _statement.bindNull(_argIndex);
+    } else {
+      _statement.bindString(_argIndex, adminId);
+    }
     return CoroutinesRoom.createFlow(__db, false, new String[] {"leagues"}, new Callable<List<League>>() {
       @Override
       @NonNull
@@ -231,6 +247,7 @@ public final class LeagueDao_Impl implements LeagueDao {
           final int _cursorIndexOfIsTeamBased = CursorUtil.getColumnIndexOrThrow(_cursor, "isTeamBased");
           final int _cursorIndexOfIsFinished = CursorUtil.getColumnIndexOrThrow(_cursor, "isFinished");
           final int _cursorIndexOfNumberCourts = CursorUtil.getColumnIndexOrThrow(_cursor, "numberCourts");
+          final int _cursorIndexOfAdminId = CursorUtil.getColumnIndexOrThrow(_cursor, "adminId");
           final List<League> _result = new ArrayList<League>(_cursor.getCount());
           while (_cursor.moveToNext()) {
             final League _item;
@@ -264,7 +281,13 @@ public final class LeagueDao_Impl implements LeagueDao {
             _tmpIsFinished = _tmp_2 != 0;
             final int _tmpNumberCourts;
             _tmpNumberCourts = _cursor.getInt(_cursorIndexOfNumberCourts);
-            _item = new League(_tmpId,_tmpName,_tmpSize,_tmpWeeklyMatches,_tmpStartDate,_tmpEndDate,_tmpScore,_tmpIsStarted,_tmpMatchDays,_tmpIsTeamBased,_tmpIsFinished,_tmpNumberCourts);
+            final String _tmpAdminId;
+            if (_cursor.isNull(_cursorIndexOfAdminId)) {
+              _tmpAdminId = null;
+            } else {
+              _tmpAdminId = _cursor.getString(_cursorIndexOfAdminId);
+            }
+            _item = new League(_tmpId,_tmpName,_tmpSize,_tmpWeeklyMatches,_tmpStartDate,_tmpEndDate,_tmpScore,_tmpIsStarted,_tmpMatchDays,_tmpIsTeamBased,_tmpIsFinished,_tmpNumberCourts,_tmpAdminId);
             _result.add(_item);
           }
           return _result;

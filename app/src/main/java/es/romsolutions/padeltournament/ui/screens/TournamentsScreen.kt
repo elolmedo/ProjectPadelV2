@@ -16,6 +16,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import es.romsolutions.padeltournament.data.model.Tournament
 import es.romsolutions.padeltournament.ui.components.EmptyState
+import es.romsolutions.padeltournament.ui.components.TournamentTeamSetupDialog
 import es.romsolutions.padeltournament.ui.viewmodel.PlayerViewModel
 import es.romsolutions.padeltournament.ui.viewmodel.TournamentViewModel
 import java.text.SimpleDateFormat
@@ -29,6 +30,7 @@ fun TournamentsListScreen(
 ) {
     val tournaments by tournamentViewModel.allTournaments.collectAsState()
     val sdf = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
+    var selectedTournamentForStart by remember { mutableStateOf<Tournament?>(null) }
 
     if (tournaments.isEmpty()) {
         EmptyState(
@@ -80,7 +82,14 @@ fun TournamentsListScreen(
                         }
                         
                         if (!tournament.isStarted) {
-                            IconButton(onClick = { tournamentViewModel.startTournament(tournament); onTournamentStarted(tournament.id) }) {
+                            IconButton(onClick = { 
+                                if (tournament.isTeamBased) {
+                                    selectedTournamentForStart = tournament
+                                } else {
+                                    tournamentViewModel.startTournament(tournament)
+                                    onTournamentStarted(tournament.id) 
+                                }
+                            }) {
                                 Icon(Icons.Default.PlayArrow, contentDescription = "Iniciar")
                             }
                         } else if (!tournament.isFinished) {
@@ -99,5 +108,20 @@ fun TournamentsListScreen(
                 }
             }
         }
+    }
+
+    if (selectedTournamentForStart != null) {
+        TournamentTeamSetupDialog(
+            tournament = selectedTournamentForStart!!,
+            playerViewModel = playerViewModel,
+            tournamentViewModel = tournamentViewModel,
+            onDismiss = { selectedTournamentForStart = null },
+            onConfirm = { teams ->
+                tournamentViewModel.startTournamentWithTeams(selectedTournamentForStart!!, teams)
+                val id = selectedTournamentForStart!!.id
+                selectedTournamentForStart = null
+                onTournamentStarted(id)
+            }
+        )
     }
 }

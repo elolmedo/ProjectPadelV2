@@ -17,6 +17,8 @@
     <string name="filter_round">Giornata</string>
     <string name="filter_week">Settimana</string>
     <string name="finish">Finire</string>
+    <string name="fixed_teams">Coppie Fisse</string>
+    <string name="format">Formato</string>
     <string name="later">Più tardi</string>
     <string name="match_duration">Durata (min)</string>
     <string name="name">Nome</string>
@@ -28,7 +30,11 @@
     <string name="phone">Telefono</string>
     <string name="pro_limit_reached">Limite raggiunto. Passa a PRO per accesso illimitato!</string>
     <string name="pro_version">Versione Premium</string>
+    <string name="reset_general_ranking">Reset Generale</string>
+    <string name="reset_ranking_confirm">Vuoi resettare TUTTA la classifica generale? Tutti i punti accumulati verranno cancellati.</string>
+    <string name="rotation">Rotazione</string>
     <string name="save">Salva</string>
+    <string name="setup_teams">Configura Coppie</string>
     <string name="simulate_results">Simula Risultati</string>
     <string name="start">Inizia</string>
     <string name="start_date">Data di inizio</string>

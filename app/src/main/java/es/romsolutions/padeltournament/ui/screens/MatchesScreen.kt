@@ -43,9 +43,22 @@ fun MatchesScreen(
     var selectedWeek by remember { mutableStateOf<Int?>(null) }
     var selectedRound by remember { mutableStateOf<Int?>(null) }
     
+    val currentTournament = filterTournamentId?.let { tid -> tournaments.find { it.id == tid } }
+    val isPozo = currentTournament?.type == "POZO"
+
+    // Auto-seleccionar la última ronda para Pozo si no hay una seleccionada
+    LaunchedEffect(matches, filterTournamentId) {
+        if (isPozo && filterTournamentId != null) {
+            val maxRound = matches.filter { it.tournamentId == filterTournamentId }.maxOfOrNull { it.roundNumber }
+            if (maxRound != null) {
+                selectedRound = maxRound
+            }
+        }
+    }
+    
     var editingMatch by remember { mutableStateOf<Match?>(null) }
     
-    androidx.compose.runtime.LaunchedEffect(initialLeagueId, initialTournamentId) {
+    LaunchedEffect(initialLeagueId, initialTournamentId) {
         filterLeagueId = initialLeagueId
         filterTournamentId = initialTournamentId
     }
@@ -94,34 +107,32 @@ fun MatchesScreen(
                             }
                         }
 
-                        if (filterLeagueId != null) {
-                            var expW by remember { mutableStateOf(false) }
-                            Spacer(Modifier.width(4.dp))
-                            ExposedDropdownMenuBox(expanded = expW, onExpandedChange = { expW = !expW }) {
-                                OutlinedTextField(
-                                    value = if(selectedWeek == null) stringResource(R.string.filter_week) else "S$selectedWeek", 
-                                    onValueChange = {}, readOnly = true, 
-                                    modifier = Modifier.menuAnchor().width(80.dp),
-                                    textStyle = MaterialTheme.typography.bodySmall
-                                )
-                                ExposedDropdownMenu(expanded = expW, onDismissRequest = { expW = false }) {
-                                    DropdownMenuItem(text = { Text(stringResource(R.string.filter_all)) }, onClick = { selectedWeek = null; expW = false })
-                                    (1..20).forEach { w -> DropdownMenuItem(text = { Text("${stringResource(R.string.filter_week)} $w") }, onClick = { selectedWeek = w; expW = false }) }
-                                }
-                            }
-                            
+                        if (filterLeagueId != null || (isPozo && filterTournamentId != null)) {
                             var expR by remember { mutableStateOf(false) }
                             Spacer(Modifier.width(4.dp))
                             ExposedDropdownMenuBox(expanded = expR, onExpandedChange = { expR = !expR }) {
                                 OutlinedTextField(
-                                    value = if(selectedRound == null) stringResource(R.string.filter_round) else "J$selectedRound", 
+                                    value = if(selectedRound == null) stringResource(R.string.filter_round) else "R$selectedRound", 
                                     onValueChange = {}, readOnly = true, 
                                     modifier = Modifier.menuAnchor().width(80.dp),
                                     textStyle = MaterialTheme.typography.bodySmall
                                 )
                                 ExposedDropdownMenu(expanded = expR, onDismissRequest = { expR = false }) {
                                     DropdownMenuItem(text = { Text(stringResource(R.string.filter_all)) }, onClick = { selectedRound = null; expR = false })
-                                    (1..50).forEach { r -> DropdownMenuItem(text = { Text("${stringResource(R.string.filter_round)} $r") }, onClick = { selectedRound = r; expR = false }) }
+                                    
+                                    // Filtrar rondas ÚNICAMENTE del torneo/liga seleccionado
+                                    val availableRounds = matches
+                                        .filter { (filterLeagueId != null && it.leagueId == filterLeagueId) || (filterTournamentId != null && it.tournamentId == filterTournamentId) }
+                                        .map { it.roundNumber }
+                                        .distinct()
+                                        .sorted()
+                                    
+                                    availableRounds.forEach { r -> 
+                                        DropdownMenuItem(
+                                            text = { Text("${stringResource(R.string.filter_round)} $r") }, 
+                                            onClick = { selectedRound = r; expR = false }
+                                        ) 
+                                    }
                                 }
                             }
                         }
@@ -133,13 +144,76 @@ fun MatchesScreen(
             val showFinishBtn = if(filterLeagueId != null) leagues.find { it.id == filterLeagueId }?.isFinished != true
                               else if(filterTournamentId != null) tournaments.find { it.id == filterTournamentId }?.isFinished != true
                               else true
-            if (showFinishBtn) {
-                Button(
-                    onClick = { leagueViewModel.finishMatchesRandomly(filterLeagueId) }, 
-                    modifier = Modifier.fillMaxWidth().padding(16.dp),
-                    shape = MaterialTheme.shapes.medium
-                ) { 
-                    Text(stringResource(R.string.simulate_results)) 
+            
+            Column(modifier = Modifier.fillMaxWidth().padding(16.dp)) {
+                if (filterTournamentId != null && showFinishBtn) {
+                    val currentMatchesForTour = matches.filter { it.tournamentId == filterTournamentId }
+                    val lastRoundCreated = currentMatchesForTour.maxOfOrNull { it.roundNumber } ?: 1
+                    val allFinishedInLastRound = currentMatchesForTour.filter { it.roundNumber == lastRoundCreated }.all { it.playFinish != null }
+                    
+                    val numPlayers = currentTournament?.numberPlayers ?: 0
+                    val isTeamBased = currentTournament?.isTeamBased ?: false
+                    
+                    val maxRounds = when(currentTournament?.type) {
+                        "AMERICANA" -> if (!isTeamBased) numPlayers - 1 else (numPlayers / 2) - 1
+                        "POZO" -> if (!isTeamBased) numPlayers - 1 else (numPlayers / 2) - 1
+                        "EXPRESS" -> (numPlayers / 4)
+                        else -> 1
+                    }
+                    
+                    val isCycleCompleted = lastRoundCreated >= maxRounds
+
+                    Button(
+                        onClick = { 
+                            if (isCycleCompleted) {
+                                tournamentViewModel.finishTournament(currentTournament!!)
+                            } else {
+                                if (isPozo) {
+                                    tournamentViewModel.generateNextPozoRound(filterTournamentId!!) 
+                                } else {
+                                    selectedRound = lastRoundCreated + 1
+                                }
+                            }
+                        },
+                        modifier = Modifier.fillMaxWidth(),
+                        enabled = allFinishedInLastRound,
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = if (isCycleCompleted) MaterialTheme.colorScheme.secondary else MaterialTheme.colorScheme.tertiary
+                        )
+                    ) {
+                        val buttonText = if (isCycleCompleted) "FINALIZAR TORNEO (CICLO COMPLETADO)" 
+                                        else if (isPozo) "SIGUIENTE RONDA (ROTAR)"
+                                        else "IR A SIGUIENTE RONDA (${lastRoundCreated + 1}/$maxRounds)"
+                        Text(buttonText)
+                    }
+                    Spacer(Modifier.height(8.dp))
+                }
+
+                if (filterLeagueId != null && showFinishBtn) {
+                    val currentMatchesForLeague = matches.filter { it.leagueId == filterLeagueId }
+                    val lastRoundWithResults = currentMatchesForLeague.filter { it.playFinish != null }.maxOfOrNull { it.roundNumber } ?: 0
+                    val totalRounds = currentMatchesForLeague.maxOfOrNull { it.roundNumber } ?: 1
+                    
+                    if (lastRoundWithResults < totalRounds) {
+                        Button(
+                            onClick = { selectedRound = lastRoundWithResults + 1 },
+                            modifier = Modifier.fillMaxWidth(),
+                            colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.tertiary)
+                        ) {
+                            Text("IR A PRÓXIMA JORNADA PENDIENTE (${lastRoundWithResults + 1})")
+                        }
+                        Spacer(Modifier.height(8.dp))
+                    }
+                }
+
+                if (showFinishBtn) {
+                    Button(
+                        onClick = { leagueViewModel.finishMatchesRandomly(filterLeagueId, filterTournamentId) },
+                        modifier = Modifier.fillMaxWidth(),
+                        shape = MaterialTheme.shapes.medium
+                    ) { 
+                        Text(stringResource(R.string.simulate_results)) 
+                    }
                 }
             }
         }
@@ -149,17 +223,30 @@ fun MatchesScreen(
                 item { Text(text = stringResource(R.string.empty_matches), modifier = Modifier.fillMaxWidth().padding(32.dp), textAlign = TextAlign.Center) }
             }
             items(filteredMatches) { m ->
-                val team1 = teams.find { it.leagueId == m.leagueId && (it.playerOneId == m.player1Id || it.playerOneId == m.player2Id) && (it.playerTwoId == m.player1Id || it.playerTwoId == m.player2Id) }?.nameTeam ?: "${players.find { it.id == m.player1Id }?.nombre?.substringBefore(" ") ?: "?"}/${players.find { it.id == m.player2Id }?.nombre?.substringBefore(" ") ?: "?"}"
-                val team2 = teams.find { it.leagueId == m.leagueId && (it.playerOneId == m.player3Id || it.playerOneId == m.player4Id) && (it.playerTwoId == m.player3Id || it.playerTwoId == m.player4Id) }?.nameTeam ?: "${players.find { it.id == m.player3Id }?.nombre?.substringBefore(" ") ?: "?"}/${players.find { it.id == m.player4Id }?.nombre?.substringBefore(" ") ?: "?"}"
+                val team1 = if (m.player1Id != -1) {
+                    teams.find { it.leagueId == m.leagueId && (it.playerOneId == m.player1Id || it.playerOneId == m.player2Id) && (it.playerTwoId == m.player1Id || it.playerTwoId == m.player2Id) }?.nameTeam ?: "${players.find { it.id == m.player1Id }?.nombre?.substringBefore(" ") ?: "?"}/${players.find { it.id == m.player2Id }?.nombre?.substringBefore(" ") ?: ""}"
+                } else "Vacío"
+                
+                val team2 = if (m.player3Id != -1) {
+                    teams.find { it.leagueId == m.leagueId && (it.playerOneId == m.player3Id || it.playerOneId == m.player2Id) && (it.playerTwoId == m.player3Id || it.playerTwoId == m.player4Id) }?.nameTeam ?: "${players.find { it.id == m.player3Id }?.nombre?.substringBefore(" ") ?: "?"}/${players.find { it.id == m.player4Id }?.nombre?.substringBefore(" ") ?: ""}"
+                } else if (m.courtNumber == 0) "EN RESERVA" else "Vacío"
 
                 Card(
-                    modifier = Modifier.fillMaxWidth().clickable { editingMatch = m },
-                    elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
+                    modifier = Modifier.fillMaxWidth().clickable { if(m.courtNumber > 0) editingMatch = m },
+                    elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
+                    colors = CardDefaults.cardColors(
+                        containerColor = if(m.courtNumber == 0) MaterialTheme.colorScheme.surfaceVariant else MaterialTheme.colorScheme.surface
+                    )
                 ) {
                     Column(modifier = Modifier.padding(12.dp)) {
                         Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-                            Text(text = "Sem. ${m.weekNumber} | Jor. ${m.roundNumber}", style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.secondary)
-                            Text(text = "Pista ${m.courtNumber}", style = MaterialTheme.typography.labelSmall, fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.primary)
+                            Text(text = "Ronda ${m.roundNumber}", style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.secondary)
+                            Text(
+                                text = if(m.courtNumber == 0) "RESERVA" else "Pista ${m.courtNumber}", 
+                                style = MaterialTheme.typography.labelSmall, 
+                                fontWeight = FontWeight.Bold, 
+                                color = if(m.courtNumber == 0) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.primary
+                            )
                         }
                         Spacer(Modifier.height(4.dp))
                         Text(text = sdf.format(Date(m.playStart ?: 0)), style = MaterialTheme.typography.bodySmall)

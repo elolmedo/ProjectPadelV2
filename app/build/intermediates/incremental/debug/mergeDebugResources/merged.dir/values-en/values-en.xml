@@ -17,6 +17,8 @@
     <string name="filter_round">Round</string>
     <string name="filter_week">Week</string>
     <string name="finish">Finish</string>
+    <string name="fixed_teams">Fixed Pairs</string>
+    <string name="format">Format</string>
     <string name="later">Later</string>
     <string name="match_duration">Duration (min)</string>
     <string name="name">Name</string>
@@ -28,7 +30,11 @@
     <string name="phone">Phone</string>
     <string name="pro_limit_reached">You have reached the free version limit. Upgrade to PRO to create unlimited players and tournaments!</string>
     <string name="pro_version">Premium Version</string>
+    <string name="reset_general_ranking">Reset General</string>
+    <string name="reset_ranking_confirm">Do you want to reset ALL the general ranking? All accumulated points will be deleted.</string>
+    <string name="rotation">Rotation</string>
     <string name="save">Save</string>
+    <string name="setup_teams">Setup Pairs</string>
     <string name="simulate_results">Simulate Results</string>
     <string name="start">Start</string>
     <string name="start_date">Start Date</string>

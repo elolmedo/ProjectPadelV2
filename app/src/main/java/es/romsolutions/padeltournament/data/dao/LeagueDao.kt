@@ -7,8 +7,8 @@ import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface LeagueDao {
-    @Query("SELECT * FROM leagues ORDER BY name ASC")
-    fun getAllLeagues(): Flow<List<League>>
+    @Query("SELECT * FROM leagues WHERE adminId = :adminId OR adminId IS NULL ORDER BY name ASC")
+    fun getLeaguesByAdmin(adminId: String?): Flow<List<League>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(league: League): Long

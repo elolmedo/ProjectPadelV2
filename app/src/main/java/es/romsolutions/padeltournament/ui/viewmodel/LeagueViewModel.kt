@@ -8,23 +8,34 @@ import es.romsolutions.padeltournament.data.model.League
 import es.romsolutions.padeltournament.data.model.Match
 import es.romsolutions.padeltournament.data.model.Ranking
 import es.romsolutions.padeltournament.data.repository.LeagueRepository
-import es.romsolutions.padeltournament.ui.screens.TeamInput
+import es.romsolutions.padeltournament.data.model.TeamInput
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import java.util.Calendar
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.flatMapLatest
 
 class LeagueViewModel(private val repository: LeagueRepository) : ViewModel() {
     private val TAG = "LeagueViewModel"
 
-    val allLeagues: StateFlow<List<League>> = repository.allLeagues
+    private val adminIdFlow = MutableStateFlow<String?>(null)
+
+    val allLeagues: StateFlow<List<League>> = adminIdFlow
+        .flatMapLatest { adminId ->
+            repository.getLeaguesByAdmin(adminId)
+        }
         .stateIn(
             scope = viewModelScope,
             started = SharingStarted.WhileSubscribed(5000),
             initialValue = emptyList()
         )
+
+    fun setAdminId(adminId: String?) {
+        adminIdFlow.value = adminId
+    }
 
     val allMatches: StateFlow<List<Match>> = repository.allMatches
         .stateIn(
@@ -90,9 +101,7 @@ class LeagueViewModel(private val repository: LeagueRepository) : ViewModel() {
                 )
             }
             
-            // Algoritmo de rotación (Circle Method) para generar Jornadas
             val rounds = generateRoundRobinRounds(teams)
-            
             val matches = mutableListOf<Match>()
             val calendar = Calendar.getInstance()
             calendar.timeInMillis = league.startDate
@@ -102,7 +111,6 @@ class LeagueViewModel(private val repository: LeagueRepository) : ViewModel() {
             
             while (roundIndex < rounds.size) {
                 var roundsScheduledThisWeek = 0
-                
                 for (d in 0..6) {
                     if (roundIndex >= rounds.size || roundsScheduledThisWeek >= league.weeklyMatches) break
                     
@@ -111,7 +119,6 @@ class LeagueViewModel(private val repository: LeagueRepository) : ViewModel() {
                     
                     if (matchDays.contains(adjustedDay)) {
                         val currentRoundMatches = rounds[roundIndex]
-                        
                         val dayCal = calendar.clone() as Calendar
                         dayCal.set(Calendar.HOUR_OF_DAY, startHour)
                         dayCal.set(Calendar.MINUTE, startMinute)
@@ -120,7 +127,6 @@ class LeagueViewModel(private val repository: LeagueRepository) : ViewModel() {
                         while (matchInRoundIdx < currentRoundMatches.size) {
                             for (court in 1..numCourts) {
                                 if (matchInRoundIdx >= currentRoundMatches.size) break
-                                
                                 val pair = currentRoundMatches[matchInRoundIdx]
                                 matches.add(Match(
                                     leagueId = league.id,
@@ -185,34 +191,54 @@ class LeagueViewModel(private val repository: LeagueRepository) : ViewModel() {
         return rounds
     }
 
-    fun finishMatchesRandomly(leagueId: Int? = null) = viewModelScope.launch {
-        val matchesToFinish = allMatches.value.filter { (it.leagueId == leagueId || leagueId == null) && it.playFinish == null }
+    fun finishMatchesRandomly(leagueId: Int? = null, tournamentId: Int? = null) = viewModelScope.launch {
+        val matchesToFinish = allMatches.value.filter { 
+            (it.leagueId == leagueId || leagueId == null) && 
+            (it.tournamentId == tournamentId || tournamentId == null) && 
+            it.playFinish == null 
+        }
+        
         if (matchesToFinish.isEmpty()) return@launch
 
         matchesToFinish.forEach { match ->
             val winner = (1..2).random()
             val isTwoZero = (0..1).random() == 0
+            
             val updatedMatch = if (winner == 1) {
-                match.copy(scoreTeamOne = 2, scoreTeamTwo = if (isTwoZero) 0 else 1, playFinish = System.currentTimeMillis())
+                match.copy(
+                    scoreTeamOne = 2,
+                    scoreTeamTwo = if (isTwoZero) 0 else 1,
+                    playFinish = System.currentTimeMillis()
+                )
             } else {
-                match.copy(scoreTeamOne = if (isTwoZero) 0 else 1, scoreTeamTwo = 2, playFinish = System.currentTimeMillis())
+                match.copy(
+                    scoreTeamOne = if (isTwoZero) 0 else 1,
+                    scoreTeamTwo = 2,
+                    playFinish = System.currentTimeMillis()
+                )
             }
             repository.updateMatch(updatedMatch)
         }
 
         leagueId?.let { lid ->
-            val allLeagueMatches = allMatches.value.filter { it.leagueId == lid }
-            if (allLeagueMatches.all { it.playFinish != null }) {
+            val matches = repository.getMatchesByLeagueSync(lid)
+            if (matches.all { it.playFinish != null }) {
                 val currentLeague = allLeagues.value.find { it.id == lid }
                 currentLeague?.let { repository.update(it.copy(isFinished = true)) }
             }
             calculateRankings(lid)
         }
+        
+        tournamentId?.let { tid ->
+            // Para torneos normales, simplemente calculamos el ranking
+            calculateTournamentRankingsShared(tid)
+        }
     }
 
     private suspend fun calculateRankings(leagueId: Int) {
-        val allLeagueMatches = allMatches.value.filter { it.leagueId == leagueId && it.playFinish != null }
+        val allLeagueMatches = repository.getMatchesByLeagueSync(leagueId).filter { it.playFinish != null }
         val playerStats = mutableMapOf<Int, Ranking>()
+        
         allLeagueMatches.forEach { m ->
             val pIds = listOf(m.player1Id, m.player2Id, m.player3Id, m.player4Id)
             pIds.forEach { pid -> if (!playerStats.containsKey(pid)) playerStats[pid] = Ranking(leagueId = leagueId, playerId = pid) }
@@ -226,7 +252,33 @@ class LeagueViewModel(private val repository: LeagueRepository) : ViewModel() {
                 playerStats[m.player2Id] = playerStats[m.player2Id]!!.let { it.copy(matchesWon = it.matchesWon + 1, points = it.points + 3) }
                 playerStats[m.player3Id] = playerStats[m.player3Id]!!.let { it.copy(matchesLost = it.matchesLost + 1) }
                 playerStats[m.player4Id] = playerStats[m.player4Id]!!.let { it.copy(matchesLost = it.matchesLost + 1) }
-            } else {
+            } else if (m.scoreTeamTwo > m.scoreTeamOne) {
+                playerStats[m.player3Id] = playerStats[m.player3Id]!!.let { it.copy(matchesWon = it.matchesWon + 1, points = it.points + 3) }
+                playerStats[m.player4Id] = playerStats[m.player4Id]!!.let { it.copy(matchesWon = it.matchesWon + 1, points = it.points + 3) }
+                playerStats[m.player1Id] = playerStats[m.player1Id]!!.let { it.copy(matchesLost = it.matchesLost + 1) }
+                playerStats[m.player2Id] = playerStats[m.player2Id]!!.let { it.copy(matchesLost = it.matchesLost + 1) }
+            }
+        }
+        repository.updateRankings(playerStats.values.toList())
+    }
+    
+    private suspend fun calculateTournamentRankingsShared(tournamentId: Int) {
+        val matches = repository.getMatchesByTournamentSync(tournamentId).filter { it.playFinish != null }
+        val playerStats = mutableMapOf<Int, Ranking>()
+        matches.forEach { m ->
+            val pIds = listOf(m.player1Id, m.player2Id, m.player3Id, m.player4Id)
+            pIds.forEach { pid -> if (!playerStats.containsKey(pid)) playerStats[pid] = Ranking(leagueId = -tournamentId, playerId = pid) }
+            val s1 = playerStats[m.player1Id]!!; val s2 = playerStats[m.player2Id]!!; val s3 = playerStats[m.player3Id]!!; val s4 = playerStats[m.player4Id]!!
+            playerStats[m.player1Id] = s1.copy(matchesPlayed = s1.matchesPlayed + 1)
+            playerStats[m.player2Id] = s2.copy(matchesPlayed = s2.matchesPlayed + 1)
+            playerStats[m.player3Id] = s3.copy(matchesPlayed = s3.matchesPlayed + 1)
+            playerStats[m.player4Id] = s4.copy(matchesPlayed = s4.matchesPlayed + 1)
+            if (m.scoreTeamOne > m.scoreTeamTwo) {
+                playerStats[m.player1Id] = playerStats[m.player1Id]!!.let { it.copy(matchesWon = it.matchesWon + 1, points = it.points + 3) }
+                playerStats[m.player2Id] = playerStats[m.player2Id]!!.let { it.copy(matchesWon = it.matchesWon + 1, points = it.points + 3) }
+                playerStats[m.player3Id] = playerStats[m.player3Id]!!.let { it.copy(matchesLost = it.matchesLost + 1) }
+                playerStats[m.player4Id] = playerStats[m.player4Id]!!.let { it.copy(matchesLost = it.matchesLost + 1) }
+            } else if (m.scoreTeamTwo > m.scoreTeamOne) {
                 playerStats[m.player3Id] = playerStats[m.player3Id]!!.let { it.copy(matchesWon = it.matchesWon + 1, points = it.points + 3) }
                 playerStats[m.player4Id] = playerStats[m.player4Id]!!.let { it.copy(matchesWon = it.matchesWon + 1, points = it.points + 3) }
                 playerStats[m.player1Id] = playerStats[m.player1Id]!!.let { it.copy(matchesLost = it.matchesLost + 1) }

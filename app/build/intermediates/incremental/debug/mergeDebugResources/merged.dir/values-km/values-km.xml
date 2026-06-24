@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:ns1="urn:oasis:names:tc:xliff:document:1.2">
+    <string msgid="8397015543330865059" name="android.credentials.TYPE_PASSWORD_CREDENTIAL">"ពាក្យសម្ងាត់"</string>
+    <string msgid="3929015085059320822" name="androidx.credentials.TYPE_PUBLIC_KEY_CREDENTIAL">"កូដសម្ងាត់"</string>
     <string msgid="6128938260108474660" name="bottom_sheet_collapse_description">"បង្រួម​សន្លឹកខាងក្រោម"</string>
     <string msgid="1918297411568599192" name="bottom_sheet_dismiss_description">"ច្រានចោល​សន្លឹកខាងក្រោម"</string>
     <string msgid="7772321844937772780" name="bottom_sheet_drag_handle_description">"ដង​អូស"</string>
@@ -14,6 +16,25 @@
     <string msgid="406453423630273620" name="close_drawer">"បិទម៉ឺនុយរុករក"</string>
     <string msgid="7573152094250666567" name="close_sheet">"បិទសន្លឹក"</string>
     <string msgid="5389587048670450460" name="collapsed">"បាន​បង្រួម"</string>
+    <string msgid="2523291102206661146" name="common_google_play_services_enable_button">បើក</string>
+    <string msgid="227660514972886228" name="common_google_play_services_enable_text">%1$s នឹងមិនដំណើរការទេ លុះត្រាតែអ្នកបើកសេវាកម្ម Google Play។</string>
+    <string msgid="5122002158466380389" name="common_google_play_services_enable_title">បើកសេវាកម្ម Google Play</string>
+    <string msgid="7153882981874058840" name="common_google_play_services_install_button">ដំឡើង</string>
+    <string name="common_google_play_services_install_text">%1$s នឹងមិនដំណើរការទេ ប្រសិនបើមិនមានសេវាកម្មនានារបស់ Google Play ដែលបានបាត់ពីឧបករណ៍របស់អ្នក។</string>
+    <string msgid="7215213145546190223" name="common_google_play_services_install_title">ទាញយកសេវាកម្ម Google Play</string>
+    <string name="common_google_play_services_notification_channel_name">លទ្ធភាព​ប្រើប្រាស់សេវាកម្ម Google Play</string>
+    <string name="common_google_play_services_notification_ticker">កំហុស​​សេវាកម្ម​ Google កម្សាន្ត</string>
+    <string name="common_google_play_services_unknown_issue">%1$s កំពុងមានបញ្ហាជាមួយសេវាកម្មរបស់ Google Play ។ សូមព្យាយាមម្តងទៀតនៅពេលក្រោយ។</string>
+    <string name="common_google_play_services_unsupported_text">%1$s នឹងមិនដំណើរការដោយគ្មានសេវាកម្មរបស់ Google Play ដែលឧបករណ៍របស់អ្នកមិនគាំទ្រនោះទេ។</string>
+    <string msgid="6556509956452265614" name="common_google_play_services_update_button">ធ្វើបច្ចុប្បន្នភាព</string>
+    <string msgid="9053896323427875356" name="common_google_play_services_update_text">%1$s នឹងមិនដំណើរការទេ លុះត្រាតែអ្នកធ្វើបច្ចុប្បន្នភាពសេវាកម្ម Google Play។</string>
+    <string msgid="6006316683626838685" name="common_google_play_services_update_title">អាប់ដេតសេវាកម្ម Google Play</string>
+    <string name="common_google_play_services_updating_text">%1$s នឹងមិនដំណើរការទេ បើមិនមានសេវាកម្ម Google Play ដោយសារតែវាកំពុងអាប់ដេត។</string>
+    <string name="common_google_play_services_wear_update_text">តម្រូវឲ្យមានកំណែថ្មីនៃសេវាកម្ម Google Play។ វានឹងអាប់ដេតដោយខ្លួនវានៅពេលបន្តិចទៀតនេះ។</string>
+    <string name="common_open_on_phone">បើកតាមទូរស័ព្ទ</string>
+    <string name="common_signin_button_text">ចូល</string>
+    <string name="common_signin_button_text_long">ចូលដោយប្រើ Google</string>
+    <string msgid="3260749812566568062" name="copy_toast_msg">"បាន​ចម្លង​តំណ​ទៅឃ្លីបបត"</string>
     <string msgid="3499643850558715142" name="date_input_headline">"កាលបរិច្ឆេទដែលបានបញ្ចូល"</string>
     <string msgid="8562356184193964298" name="date_input_headline_description">"កាលបរិច្ឆេទដែលបានបញ្ចូល៖ %1$s"</string>
     <string msgid="5281836720766682161" name="date_input_invalid_for_pattern">"កាលបរិច្ឆេទមិនត្រូវគ្នានឹងលំនាំដែលរំពឹងទុកទេ៖ %1$s"</string>
@@ -50,6 +71,9 @@
     <string msgid="4057925834421392736" name="dialog">"ប្រអប់"</string>
     <string msgid="1890207353314751437" name="dropdown_menu">"ម៉ឺនុយធ្លាក់ចុះ"</string>
     <string msgid="5974471714631304645" name="expanded">"បាន​ពង្រីក"</string>
+    <string msgid="4566929209979330987" name="fallback_menu_item_copy_link">"ចម្លង​តំណ"</string>
+    <string msgid="3413186855122069269" name="fallback_menu_item_open_in_browser">"បើក​នៅក្នុង​កម្មវិធី​រុករកតាម​អ៊ីនធឺណិត"</string>
+    <string msgid="7145444925855055364" name="fallback_menu_item_share_link">"តំណចែករំលែក"</string>
     <string msgid="6827826412747255547" name="in_progress">"កំពុងដំណើរការ"</string>
     <string msgid="7933458017204019916" name="indeterminate">"បានធីកខ្លះ"</string>
     <string msgid="542007171693138492" name="navigation_menu">"ម៉ឺនុយរុករក"</string>
@@ -78,6 +102,8 @@
     <string msgid="994099543833979061" name="time_picker_minute_text_field">"រយៈពេលប៉ុន្មាននាទី"</string>
     <string msgid="7352665290700284516" name="time_picker_period_toggle_description">"ជ្រើសរើស AM ឬ PM"</string>
     <string msgid="2232702812657998674" name="time_picker_pm">"PM"</string>
+    <string msgid="3765533235322692011" name="tooltip_description">"កំណត់​ពន្យល់"</string>
+    <string msgid="3124740595719787496" name="tooltip_label">"បង្ហាញ​កំណត់​ពន្យល់"</string>
     <string msgid="2732804537909054941" name="tooltip_long_press_label">"បង្ហាញ​កំណត់​ពន្យល់"</string>
     <string msgid="8191239805703103845" name="tooltip_pane_description">"កំណត់​ពន្យល់"</string>
 </resources>

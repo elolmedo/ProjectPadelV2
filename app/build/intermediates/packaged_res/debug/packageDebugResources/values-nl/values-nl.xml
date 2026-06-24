@@ -17,6 +17,8 @@
     <string name="filter_round">Ronde</string>
     <string name="filter_week">Week</string>
     <string name="finish">Voltooien</string>
+    <string name="fixed_teams">Vaste Teams</string>
+    <string name="format">Formaat</string>
     <string name="later">Later</string>
     <string name="match_duration">Duur (min)</string>
     <string name="name">Naam</string>
@@ -28,7 +30,11 @@
     <string name="phone">Telefoon</string>
     <string name="pro_limit_reached">Limiet bereikt. Upgrade naar PRO voor onbeperkte toegang!</string>
     <string name="pro_version">Premium Versie</string>
+    <string name="reset_general_ranking">Algemeen Resetten</string>
+    <string name="reset_ranking_confirm">Wilt u de GEHELE algemene ranglijst resetten? Alle verzamelde punten worden verwijderd.</string>
+    <string name="rotation">Rotatie</string>
     <string name="save">Opslaan</string>
+    <string name="setup_teams">Teams Instellen</string>
     <string name="simulate_results">Resultaten simuleren</string>
     <string name="start">Starten</string>
     <string name="start_date">Startdatum</string>

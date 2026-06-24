@@ -5,7 +5,7 @@ import es.romsolutions.padeltournament.data.model.Player
 import kotlinx.coroutines.flow.Flow
 
 class PlayerRepository(val playerDao: PlayerDao) {
-    val allPlayers: Flow<List<Player>> = playerDao.getAllPlayers()
+    fun getPlayersByAdmin(adminId: String?): Flow<List<Player>> = playerDao.getPlayersByAdmin(adminId)
 
     suspend fun insert(player: Player) {
         playerDao.insertPlayer(player)
@@ -18,4 +18,6 @@ class PlayerRepository(val playerDao: PlayerDao) {
     suspend fun deleteAll() {
         playerDao.deleteAllPlayers()
     }
+
+    suspend fun getPlayersByIds(ids: List<Int>): List<Player> = playerDao.getPlayersByIds(ids)
 }

@@ -29,7 +29,9 @@ object DatabaseSeeder {
                             nombre = "$nombre $apellido",
                             sexo = sexo,
                             phone = "6${(10000000..99999999).random()}",
-                            email = "${nombre.lowercase()}.${apellido.lowercase()}$i@example.com"
+                            email = "${nombre.lowercase()}.${apellido.lowercase()}$i@example.com",
+                            adminId = null,
+                            photoUri = null
                         )
                     }
                     

@@ -51,4 +51,11 @@
 
     <string name="simulate_results">Simulate Results</string>
     <string name="update_score">Update Score</string>
+
+    <string name="reset_general_ranking">Reset General</string>
+    <string name="reset_ranking_confirm">Do you want to reset ALL the general ranking? All accumulated points will be deleted.</string>
+    <string name="format">Format</string>
+    <string name="rotation">Rotation</string>
+    <string name="fixed_teams">Fixed Pairs</string>
+    <string name="setup_teams">Setup Pairs</string>
 </resources>

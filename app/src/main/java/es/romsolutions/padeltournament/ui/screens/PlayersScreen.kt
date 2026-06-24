@@ -12,6 +12,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.res.stringResource
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.layout.ContentScale
+import coil.compose.AsyncImage
 import es.romsolutions.padeltournament.R
 import es.romsolutions.padeltournament.data.model.Player
 import es.romsolutions.padeltournament.ui.components.AddPlayerDialog
@@ -77,11 +81,38 @@ fun PlayersListScreen(
                             containerColor = if (isSelected) MaterialTheme.colorScheme.primaryContainer else MaterialTheme.colorScheme.surface
                         )
                     ) {
-                        Row(modifier = Modifier.padding(16.dp), verticalAlignment = Alignment.CenterVertically) {
-                            Checkbox(checked = isSelected, onCheckedChange = null)
-                            Column(modifier = Modifier.padding(start = 8.dp)) {
-                                Text(text = p.nombre, style = MaterialTheme.typography.titleLarge)
-                                Text(text = "Tel: ${p.phone} | Email: ${p.email}", color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f))
+                        Row(
+                            modifier = Modifier.padding(16.dp), 
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.SpaceBetween
+                        ) {
+                            Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.weight(1f)) {
+                                Checkbox(checked = isSelected, onCheckedChange = null)
+                                Column(modifier = Modifier.padding(start = 8.dp)) {
+                                    Text(text = p.nombre, style = MaterialTheme.typography.titleLarge)
+                                    Text(text = "Tel: ${p.phone} | Email: ${p.email}", color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f))
+                                }
+                            }
+                            
+                            // Imagen de contacto o icono genérico
+                            if (p.photoUri != null) {
+                                AsyncImage(
+                                    model = p.photoUri,
+                                    contentDescription = null,
+                                    modifier = Modifier
+                                        .size(40.dp)
+                                        .clip(CircleShape),
+                                    contentScale = ContentScale.Crop
+                                )
+                            } else {
+                                Icon(
+                                    imageVector = Icons.Default.Person,
+                                    contentDescription = null,
+                                    modifier = Modifier
+                                        .size(40.dp)
+                                        .clip(CircleShape),
+                                    tint = MaterialTheme.colorScheme.primary
+                                )
                             }
                         }
                     }
@@ -116,6 +147,7 @@ fun EditPlayerDialog(player: Player, onDismiss: () -> Unit, onSave: (Player) -> 
     var n by remember { mutableStateOf(player.nombre) }
     var p by remember { mutableStateOf(player.phone) }
     var e by remember { mutableStateOf(player.email) }
+    var l by remember { mutableStateOf(player.level) }
 
     androidx.compose.ui.window.Dialog(onDismissRequest = onDismiss) {
         Card(modifier = Modifier.fillMaxWidth().padding(16.dp)) {
@@ -124,9 +156,18 @@ fun EditPlayerDialog(player: Player, onDismiss: () -> Unit, onSave: (Player) -> 
                 OutlinedTextField(value = n, onValueChange = { n = it }, label = { Text("Nombre") })
                 OutlinedTextField(value = p, onValueChange = { p = it }, label = { Text("Teléfono") })
                 OutlinedTextField(value = e, onValueChange = { e = it }, label = { Text("Email") })
+                
+                Text(text = "Nivel: ${String.format("%.1f", l)}", style = MaterialTheme.typography.titleSmall)
+                Slider(
+                    value = l.toFloat(),
+                    onValueChange = { l = it.toDouble() },
+                    valueRange = 1.0f..7.0f,
+                    steps = 11
+                )
+
                 Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.End) {
                     TextButton(onClick = onDismiss) { Text("Cancelar") }
-                    Button(onClick = { onSave(player.copy(nombre = n, phone = p, email = e)) }) { Text("Guardar") }
+                    Button(onClick = { onSave(player.copy(nombre = n, phone = p, email = e, level = l)) }) { Text("Guardar") }
                 }
             }
         }

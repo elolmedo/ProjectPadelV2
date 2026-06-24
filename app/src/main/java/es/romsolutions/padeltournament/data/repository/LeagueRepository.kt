@@ -14,7 +14,7 @@ class LeagueRepository(
     private val matchDao: MatchDao,
     private val teamDao: es.romsolutions.padeltournament.data.dao.TeamDao
 ) {
-    val allLeagues: Flow<List<League>> = leagueDao.getAllLeagues()
+    fun getLeaguesByAdmin(adminId: String?): Flow<List<League>> = leagueDao.getLeaguesByAdmin(adminId)
     val allMatches: Flow<List<Match>> = matchDao.getAllMatches()
     val allTeams: Flow<List<es.romsolutions.padeltournament.data.model.Team>> = teamDao.getAllTeams()
     val generalRanking: Flow<List<Ranking>> = rankingDao.getGeneralRanking()
@@ -65,6 +65,14 @@ class LeagueRepository(
 
     suspend fun updateMatch(match: Match) {
         matchDao.update(match)
+    }
+
+    suspend fun getMatchesByLeagueSync(leagueId: Int): List<Match> {
+        return matchDao.getMatchesByLeagueSync(leagueId)
+    }
+
+    suspend fun getMatchesByTournamentSync(tournamentId: Int): List<Match> {
+        return matchDao.getMatchesByTournamentSync(tournamentId)
     }
 
     suspend fun delete(league: League) {

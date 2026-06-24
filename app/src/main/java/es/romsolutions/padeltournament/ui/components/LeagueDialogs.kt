@@ -18,9 +18,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import es.romsolutions.padeltournament.data.model.League
 import es.romsolutions.padeltournament.data.model.Player
+import es.romsolutions.padeltournament.data.model.TeamInput
 import es.romsolutions.padeltournament.ui.viewmodel.LeagueViewModel
 import es.romsolutions.padeltournament.ui.viewmodel.PlayerViewModel
-import es.romsolutions.padeltournament.ui.screens.TeamInput
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -28,6 +28,7 @@ import java.util.*
 @Composable
 fun AddLeagueDialog(
     playerViewModel: PlayerViewModel,
+    authManager: es.romsolutions.padeltournament.auth.AuthManager? = null,
     initialPlayerIds: List<Int> = emptyList(),
     onDismiss: () -> Unit,
     onSave: (League, List<Int>) -> Unit
@@ -109,7 +110,8 @@ fun AddLeagueDialog(
                                     startDate = selectedDate, 
                                     endDate = endDate, 
                                     isTeamBased = true,
-                                    numberCourts = courts.toIntOrNull() ?: 1
+                                    numberCourts = courts.toIntOrNull() ?: 1,
+                                    adminId = authManager?.getCurrentUserId()
                                 ), 
                                 selectedPlayerIds.toList()
                             )

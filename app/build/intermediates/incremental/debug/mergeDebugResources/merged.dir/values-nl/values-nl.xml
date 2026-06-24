@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:ns1="urn:oasis:names:tc:xliff:document:1.2">
     <string name="add">Toevoegen</string>
+    <string msgid="8397015543330865059" name="android.credentials.TYPE_PASSWORD_CREDENTIAL">"Wachtwoord"</string>
+    <string msgid="3929015085059320822" name="androidx.credentials.TYPE_PUBLIC_KEY_CREDENTIAL">"Toegangssleutel"</string>
     <string name="app_name">PADEL PRO</string>
     <string name="back">Terug</string>
     <string msgid="6128938260108474660" name="bottom_sheet_collapse_description">"Blad onderaan samenvouwen"</string>
@@ -18,7 +20,26 @@
     <string msgid="406453423630273620" name="close_drawer">"Navigatiemenu sluiten"</string>
     <string msgid="7573152094250666567" name="close_sheet">"Blad sluiten"</string>
     <string msgid="5389587048670450460" name="collapsed">"Samengevouwen"</string>
+    <string msgid="2523291102206661146" name="common_google_play_services_enable_button">Aanzetten</string>
+    <string msgid="227660514972886228" name="common_google_play_services_enable_text">%1$s werkt niet, tenzij je Google Play-services aanzet.</string>
+    <string msgid="5122002158466380389" name="common_google_play_services_enable_title">Google Play-services aanzetten</string>
+    <string msgid="7153882981874058840" name="common_google_play_services_install_button">Installeren</string>
+    <string name="common_google_play_services_install_text">%1$s kan niet worden uitgevoerd zonder Google Play-services, die je nog niet op je apparaat hebt.</string>
+    <string msgid="7215213145546190223" name="common_google_play_services_install_title">Google Play-services ophalen</string>
+    <string name="common_google_play_services_notification_channel_name">Beschikbaarheid van Google Play-services</string>
+    <string name="common_google_play_services_notification_ticker">Fout met Google Play-services</string>
+    <string name="common_google_play_services_unknown_issue">%1$s ondervindt problemen met Google Play-services. Probeer het opnieuw.</string>
+    <string name="common_google_play_services_unsupported_text">%1$s kan niet worden uitgevoerd zonder Google Play-services, die niet worden ondersteund op je apparaat.</string>
+    <string msgid="6556509956452265614" name="common_google_play_services_update_button">Updaten</string>
+    <string msgid="9053896323427875356" name="common_google_play_services_update_text">%1$s kan niet worden uitgevoerd, tenzij je Google Play-services updatet.</string>
+    <string msgid="6006316683626838685" name="common_google_play_services_update_title">Google Play-services updaten</string>
+    <string name="common_google_play_services_updating_text">%1$s kan niet worden uitgevoerd zonder Google Play-services, die momenteel worden geüpdatet.</string>
+    <string name="common_google_play_services_wear_update_text">Er is een nieuwe versie van Google Play-services vereist. De update wordt binnenkort automatisch uitgevoerd.</string>
+    <string name="common_open_on_phone">Openen op telefoon</string>
+    <string name="common_signin_button_text">Inloggen</string>
+    <string name="common_signin_button_text_long">Inloggen met Google</string>
     <string name="confirm">Bevestigen</string>
+    <string msgid="3260749812566568062" name="copy_toast_msg">"Link naar klembord gekopieerd"</string>
     <string name="courts">Banen</string>
     <string msgid="3499643850558715142" name="date_input_headline">"Opgegeven datum"</string>
     <string msgid="8562356184193964298" name="date_input_headline_description">"Opgegeven datum: %1$s"</string>
@@ -63,10 +84,15 @@
     <string name="empty_players">Geen spelers gevonden.</string>
     <string name="empty_tournaments">Geen toernooien aangemaakt.</string>
     <string msgid="5974471714631304645" name="expanded">"Uitgevouwen"</string>
+    <string msgid="4566929209979330987" name="fallback_menu_item_copy_link">"Link kopiëren"</string>
+    <string msgid="3413186855122069269" name="fallback_menu_item_open_in_browser">"Openen in browser"</string>
+    <string msgid="7145444925855055364" name="fallback_menu_item_share_link">"Link delen"</string>
     <string name="filter_all">Alle</string>
     <string name="filter_round">Ronde</string>
     <string name="filter_week">Week</string>
     <string name="finish">Voltooien</string>
+    <string name="fixed_teams">Vaste Teams</string>
+    <string name="format">Formaat</string>
     <string msgid="6827826412747255547" name="in_progress">"Bezig"</string>
     <string msgid="7933458017204019916" name="indeterminate">"Gedeeltelijk aangevinkt"</string>
     <string name="later">Later</string>
@@ -86,9 +112,13 @@
     <string name="pro_version">Premium Versie</string>
     <string msgid="5941395253238309765" name="range_end">"Einde bereik"</string>
     <string msgid="7097486360902471446" name="range_start">"Start bereik"</string>
+    <string name="reset_general_ranking">Algemeen Resetten</string>
+    <string name="reset_ranking_confirm">Wilt u de GEHELE algemene ranglijst resetten? Alle verzamelde punten worden verwijderd.</string>
+    <string name="rotation">Rotatie</string>
     <string name="save">Opslaan</string>
     <string msgid="6420018528474762666" name="search_bar_search">"Zoeken"</string>
     <string msgid="6043586758067023" name="selected">"Geselecteerd"</string>
+    <string name="setup_teams">Teams Instellen</string>
     <string name="simulate_results">Resultaten simuleren</string>
     <string msgid="3962933905051144957" name="snackbar_dismiss">"Sluiten"</string>
     <string name="start">Starten</string>
@@ -119,6 +149,8 @@
     <string msgid="994099543833979061" name="time_picker_minute_text_field">"voor minuten"</string>
     <string msgid="7352665290700284516" name="time_picker_period_toggle_description">"AM of PM selecteren"</string>
     <string msgid="2232702812657998674" name="time_picker_pm">"PM"</string>
+    <string msgid="3765533235322692011" name="tooltip_description">"tooltip"</string>
+    <string msgid="3124740595719787496" name="tooltip_label">"tooltip tonen"</string>
     <string msgid="2732804537909054941" name="tooltip_long_press_label">"Tooltip tonen"</string>
     <string msgid="8191239805703103845" name="tooltip_pane_description">"Tooltip"</string>
     <string name="update_score">Score bijwerken</string>

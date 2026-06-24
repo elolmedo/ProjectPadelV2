@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "416205523640",
+    "project_id": "padel-pro-2a109",
+    "storage_bucket": "padel-pro-2a109.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:416205523640:android:ecb0442c517c677821424d",
+        "android_client_info": {
+          "package_name": "es.romsolutions.padeltournament"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "416205523640-8e7lb6t1djajmg0pcfu1r3a4qgnttjgd.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "es.romsolutions.padeltournament",
+            "certificate_hash": "6ee08d1570db917eb818f83f295b179c2dc23c42"
+          }
+        },
+        {
+          "client_id": "416205523640-1i8fb36l4vodf56q0nuolt7hbqn4b11u.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCGXExLADOz0KK2acnen_lTueYwOXB5uWQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "416205523640-1i8fb36l4vodf56q0nuolt7hbqn4b11u.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

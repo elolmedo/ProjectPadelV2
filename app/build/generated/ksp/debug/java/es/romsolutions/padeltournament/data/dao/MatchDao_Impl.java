@@ -1,6 +1,7 @@
 package es.romsolutions.padeltournament.data.dao;
 
 import android.database.Cursor;
+import android.os.CancellationSignal;
 import androidx.annotation.NonNull;
 import androidx.room.CoroutinesRoom;
 import androidx.room.EntityDeletionOrUpdateAdapter;
@@ -517,6 +518,202 @@ public final class MatchDao_Impl implements MatchDao {
         _statement.release();
       }
     });
+  }
+
+  @Override
+  public Object getMatchesByTournamentSync(final int tournamentId,
+      final Continuation<? super List<Match>> $completion) {
+    final String _sql = "SELECT * FROM matches WHERE tournamentId = ?";
+    final RoomSQLiteQuery _statement = RoomSQLiteQuery.acquire(_sql, 1);
+    int _argIndex = 1;
+    _statement.bindLong(_argIndex, tournamentId);
+    final CancellationSignal _cancellationSignal = DBUtil.createCancellationSignal();
+    return CoroutinesRoom.execute(__db, false, _cancellationSignal, new Callable<List<Match>>() {
+      @Override
+      @NonNull
+      public List<Match> call() throws Exception {
+        final Cursor _cursor = DBUtil.query(__db, _statement, false, null);
+        try {
+          final int _cursorIndexOfId = CursorUtil.getColumnIndexOrThrow(_cursor, "id");
+          final int _cursorIndexOfTournamentId = CursorUtil.getColumnIndexOrThrow(_cursor, "tournamentId");
+          final int _cursorIndexOfLeagueId = CursorUtil.getColumnIndexOrThrow(_cursor, "leagueId");
+          final int _cursorIndexOfPlayer1Id = CursorUtil.getColumnIndexOrThrow(_cursor, "player1Id");
+          final int _cursorIndexOfPlayer2Id = CursorUtil.getColumnIndexOrThrow(_cursor, "player2Id");
+          final int _cursorIndexOfPlayer3Id = CursorUtil.getColumnIndexOrThrow(_cursor, "player3Id");
+          final int _cursorIndexOfPlayer4Id = CursorUtil.getColumnIndexOrThrow(_cursor, "player4Id");
+          final int _cursorIndexOfTeamOneId = CursorUtil.getColumnIndexOrThrow(_cursor, "teamOneId");
+          final int _cursorIndexOfTeamTwoId = CursorUtil.getColumnIndexOrThrow(_cursor, "teamTwoId");
+          final int _cursorIndexOfIsByTime = CursorUtil.getColumnIndexOrThrow(_cursor, "isByTime");
+          final int _cursorIndexOfPlayStart = CursorUtil.getColumnIndexOrThrow(_cursor, "playStart");
+          final int _cursorIndexOfPlayFinish = CursorUtil.getColumnIndexOrThrow(_cursor, "playFinish");
+          final int _cursorIndexOfScoreTeamOne = CursorUtil.getColumnIndexOrThrow(_cursor, "scoreTeamOne");
+          final int _cursorIndexOfScoreTeamTwo = CursorUtil.getColumnIndexOrThrow(_cursor, "scoreTeamTwo");
+          final int _cursorIndexOfCourtNumber = CursorUtil.getColumnIndexOrThrow(_cursor, "courtNumber");
+          final int _cursorIndexOfWeekNumber = CursorUtil.getColumnIndexOrThrow(_cursor, "weekNumber");
+          final int _cursorIndexOfRoundNumber = CursorUtil.getColumnIndexOrThrow(_cursor, "roundNumber");
+          final List<Match> _result = new ArrayList<Match>(_cursor.getCount());
+          while (_cursor.moveToNext()) {
+            final Match _item;
+            final int _tmpId;
+            _tmpId = _cursor.getInt(_cursorIndexOfId);
+            final Integer _tmpTournamentId;
+            if (_cursor.isNull(_cursorIndexOfTournamentId)) {
+              _tmpTournamentId = null;
+            } else {
+              _tmpTournamentId = _cursor.getInt(_cursorIndexOfTournamentId);
+            }
+            final Integer _tmpLeagueId;
+            if (_cursor.isNull(_cursorIndexOfLeagueId)) {
+              _tmpLeagueId = null;
+            } else {
+              _tmpLeagueId = _cursor.getInt(_cursorIndexOfLeagueId);
+            }
+            final int _tmpPlayer1Id;
+            _tmpPlayer1Id = _cursor.getInt(_cursorIndexOfPlayer1Id);
+            final int _tmpPlayer2Id;
+            _tmpPlayer2Id = _cursor.getInt(_cursorIndexOfPlayer2Id);
+            final int _tmpPlayer3Id;
+            _tmpPlayer3Id = _cursor.getInt(_cursorIndexOfPlayer3Id);
+            final int _tmpPlayer4Id;
+            _tmpPlayer4Id = _cursor.getInt(_cursorIndexOfPlayer4Id);
+            final int _tmpTeamOneId;
+            _tmpTeamOneId = _cursor.getInt(_cursorIndexOfTeamOneId);
+            final int _tmpTeamTwoId;
+            _tmpTeamTwoId = _cursor.getInt(_cursorIndexOfTeamTwoId);
+            final boolean _tmpIsByTime;
+            final int _tmp;
+            _tmp = _cursor.getInt(_cursorIndexOfIsByTime);
+            _tmpIsByTime = _tmp != 0;
+            final Long _tmpPlayStart;
+            if (_cursor.isNull(_cursorIndexOfPlayStart)) {
+              _tmpPlayStart = null;
+            } else {
+              _tmpPlayStart = _cursor.getLong(_cursorIndexOfPlayStart);
+            }
+            final Long _tmpPlayFinish;
+            if (_cursor.isNull(_cursorIndexOfPlayFinish)) {
+              _tmpPlayFinish = null;
+            } else {
+              _tmpPlayFinish = _cursor.getLong(_cursorIndexOfPlayFinish);
+            }
+            final int _tmpScoreTeamOne;
+            _tmpScoreTeamOne = _cursor.getInt(_cursorIndexOfScoreTeamOne);
+            final int _tmpScoreTeamTwo;
+            _tmpScoreTeamTwo = _cursor.getInt(_cursorIndexOfScoreTeamTwo);
+            final int _tmpCourtNumber;
+            _tmpCourtNumber = _cursor.getInt(_cursorIndexOfCourtNumber);
+            final int _tmpWeekNumber;
+            _tmpWeekNumber = _cursor.getInt(_cursorIndexOfWeekNumber);
+            final int _tmpRoundNumber;
+            _tmpRoundNumber = _cursor.getInt(_cursorIndexOfRoundNumber);
+            _item = new Match(_tmpId,_tmpTournamentId,_tmpLeagueId,_tmpPlayer1Id,_tmpPlayer2Id,_tmpPlayer3Id,_tmpPlayer4Id,_tmpTeamOneId,_tmpTeamTwoId,_tmpIsByTime,_tmpPlayStart,_tmpPlayFinish,_tmpScoreTeamOne,_tmpScoreTeamTwo,_tmpCourtNumber,_tmpWeekNumber,_tmpRoundNumber);
+            _result.add(_item);
+          }
+          return _result;
+        } finally {
+          _cursor.close();
+          _statement.release();
+        }
+      }
+    }, $completion);
+  }
+
+  @Override
+  public Object getMatchesByLeagueSync(final int leagueId,
+      final Continuation<? super List<Match>> $completion) {
+    final String _sql = "SELECT * FROM matches WHERE leagueId = ?";
+    final RoomSQLiteQuery _statement = RoomSQLiteQuery.acquire(_sql, 1);
+    int _argIndex = 1;
+    _statement.bindLong(_argIndex, leagueId);
+    final CancellationSignal _cancellationSignal = DBUtil.createCancellationSignal();
+    return CoroutinesRoom.execute(__db, false, _cancellationSignal, new Callable<List<Match>>() {
+      @Override
+      @NonNull
+      public List<Match> call() throws Exception {
+        final Cursor _cursor = DBUtil.query(__db, _statement, false, null);
+        try {
+          final int _cursorIndexOfId = CursorUtil.getColumnIndexOrThrow(_cursor, "id");
+          final int _cursorIndexOfTournamentId = CursorUtil.getColumnIndexOrThrow(_cursor, "tournamentId");
+          final int _cursorIndexOfLeagueId = CursorUtil.getColumnIndexOrThrow(_cursor, "leagueId");
+          final int _cursorIndexOfPlayer1Id = CursorUtil.getColumnIndexOrThrow(_cursor, "player1Id");
+          final int _cursorIndexOfPlayer2Id = CursorUtil.getColumnIndexOrThrow(_cursor, "player2Id");
+          final int _cursorIndexOfPlayer3Id = CursorUtil.getColumnIndexOrThrow(_cursor, "player3Id");
+          final int _cursorIndexOfPlayer4Id = CursorUtil.getColumnIndexOrThrow(_cursor, "player4Id");
+          final int _cursorIndexOfTeamOneId = CursorUtil.getColumnIndexOrThrow(_cursor, "teamOneId");
+          final int _cursorIndexOfTeamTwoId = CursorUtil.getColumnIndexOrThrow(_cursor, "teamTwoId");
+          final int _cursorIndexOfIsByTime = CursorUtil.getColumnIndexOrThrow(_cursor, "isByTime");
+          final int _cursorIndexOfPlayStart = CursorUtil.getColumnIndexOrThrow(_cursor, "playStart");
+          final int _cursorIndexOfPlayFinish = CursorUtil.getColumnIndexOrThrow(_cursor, "playFinish");
+          final int _cursorIndexOfScoreTeamOne = CursorUtil.getColumnIndexOrThrow(_cursor, "scoreTeamOne");
+          final int _cursorIndexOfScoreTeamTwo = CursorUtil.getColumnIndexOrThrow(_cursor, "scoreTeamTwo");
+          final int _cursorIndexOfCourtNumber = CursorUtil.getColumnIndexOrThrow(_cursor, "courtNumber");
+          final int _cursorIndexOfWeekNumber = CursorUtil.getColumnIndexOrThrow(_cursor, "weekNumber");
+          final int _cursorIndexOfRoundNumber = CursorUtil.getColumnIndexOrThrow(_cursor, "roundNumber");
+          final List<Match> _result = new ArrayList<Match>(_cursor.getCount());
+          while (_cursor.moveToNext()) {
+            final Match _item;
+            final int _tmpId;
+            _tmpId = _cursor.getInt(_cursorIndexOfId);
+            final Integer _tmpTournamentId;
+            if (_cursor.isNull(_cursorIndexOfTournamentId)) {
+              _tmpTournamentId = null;
+            } else {
+              _tmpTournamentId = _cursor.getInt(_cursorIndexOfTournamentId);
+            }
+            final Integer _tmpLeagueId;
+            if (_cursor.isNull(_cursorIndexOfLeagueId)) {
+              _tmpLeagueId = null;
+            } else {
+              _tmpLeagueId = _cursor.getInt(_cursorIndexOfLeagueId);
+            }
+            final int _tmpPlayer1Id;
+            _tmpPlayer1Id = _cursor.getInt(_cursorIndexOfPlayer1Id);
+            final int _tmpPlayer2Id;
+            _tmpPlayer2Id = _cursor.getInt(_cursorIndexOfPlayer2Id);
+            final int _tmpPlayer3Id;
+            _tmpPlayer3Id = _cursor.getInt(_cursorIndexOfPlayer3Id);
+            final int _tmpPlayer4Id;
+            _tmpPlayer4Id = _cursor.getInt(_cursorIndexOfPlayer4Id);
+            final int _tmpTeamOneId;
+            _tmpTeamOneId = _cursor.getInt(_cursorIndexOfTeamOneId);
+            final int _tmpTeamTwoId;
+            _tmpTeamTwoId = _cursor.getInt(_cursorIndexOfTeamTwoId);
+            final boolean _tmpIsByTime;
+            final int _tmp;
+            _tmp = _cursor.getInt(_cursorIndexOfIsByTime);
+            _tmpIsByTime = _tmp != 0;
+            final Long _tmpPlayStart;
+            if (_cursor.isNull(_cursorIndexOfPlayStart)) {
+              _tmpPlayStart = null;
+            } else {
+              _tmpPlayStart = _cursor.getLong(_cursorIndexOfPlayStart);
+            }
+            final Long _tmpPlayFinish;
+            if (_cursor.isNull(_cursorIndexOfPlayFinish)) {
+              _tmpPlayFinish = null;
+            } else {
+              _tmpPlayFinish = _cursor.getLong(_cursorIndexOfPlayFinish);
+            }
+            final int _tmpScoreTeamOne;
+            _tmpScoreTeamOne = _cursor.getInt(_cursorIndexOfScoreTeamOne);
+            final int _tmpScoreTeamTwo;
+            _tmpScoreTeamTwo = _cursor.getInt(_cursorIndexOfScoreTeamTwo);
+            final int _tmpCourtNumber;
+            _tmpCourtNumber = _cursor.getInt(_cursorIndexOfCourtNumber);
+            final int _tmpWeekNumber;
+            _tmpWeekNumber = _cursor.getInt(_cursorIndexOfWeekNumber);
+            final int _tmpRoundNumber;
+            _tmpRoundNumber = _cursor.getInt(_cursorIndexOfRoundNumber);
+            _item = new Match(_tmpId,_tmpTournamentId,_tmpLeagueId,_tmpPlayer1Id,_tmpPlayer2Id,_tmpPlayer3Id,_tmpPlayer4Id,_tmpTeamOneId,_tmpTeamTwoId,_tmpIsByTime,_tmpPlayStart,_tmpPlayFinish,_tmpScoreTeamOne,_tmpScoreTeamTwo,_tmpCourtNumber,_tmpWeekNumber,_tmpRoundNumber);
+            _result.add(_item);
+          }
+          return _result;
+        } finally {
+          _cursor.close();
+          _statement.release();
+        }
+      }
+    }, $completion);
   }
 
   @NonNull

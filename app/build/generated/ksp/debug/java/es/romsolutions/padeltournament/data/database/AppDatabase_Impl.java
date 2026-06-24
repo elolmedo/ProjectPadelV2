@@ -54,18 +54,18 @@ public final class AppDatabase_Impl extends AppDatabase {
   @Override
   @NonNull
   protected SupportSQLiteOpenHelper createOpenHelper(@NonNull final DatabaseConfiguration config) {
-    final SupportSQLiteOpenHelper.Callback _openCallback = new RoomOpenHelper(config, new RoomOpenHelper.Delegate(24) {
+    final SupportSQLiteOpenHelper.Callback _openCallback = new RoomOpenHelper(config, new RoomOpenHelper.Delegate(28) {
       @Override
       public void createAllTables(@NonNull final SupportSQLiteDatabase db) {
-        db.execSQL("CREATE TABLE IF NOT EXISTS `players` (`idplayer` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `name` TEXT NOT NULL, `sex` TEXT NOT NULL, `mail` TEXT NOT NULL, `phone` TEXT NOT NULL, `numbertorneosparticipate` INTEGER NOT NULL, `wintournaments` INTEGER NOT NULL, `setplayed` INTEGER NOT NULL, `setwinner` INTEGER NOT NULL, `adminid` INTEGER NOT NULL)");
-        db.execSQL("CREATE TABLE IF NOT EXISTS `tournaments` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `name` TEXT NOT NULL, `type` TEXT NOT NULL, `scoreType` TEXT NOT NULL, `numSets` INTEGER NOT NULL, `matchDuration` INTEGER NOT NULL, `isMixed` INTEGER NOT NULL, `dateTour` INTEGER, `timeStart` INTEGER, `maxHoursPerDay` INTEGER NOT NULL, `numberPlayers` INTEGER NOT NULL, `numberCourts` INTEGER NOT NULL, `isStarted` INTEGER NOT NULL, `isFinished` INTEGER NOT NULL)");
+        db.execSQL("CREATE TABLE IF NOT EXISTS `players` (`idplayer` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `name` TEXT NOT NULL, `sex` TEXT NOT NULL, `mail` TEXT NOT NULL, `phone` TEXT NOT NULL, `numbertorneosparticipate` INTEGER NOT NULL, `wintournaments` INTEGER NOT NULL, `setplayed` INTEGER NOT NULL, `setwinner` INTEGER NOT NULL, `adminid` TEXT, `level` REAL NOT NULL, `photo_uri` TEXT)");
+        db.execSQL("CREATE TABLE IF NOT EXISTS `tournaments` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `name` TEXT NOT NULL, `type` TEXT NOT NULL, `scoreType` TEXT NOT NULL, `numSets` INTEGER NOT NULL, `matchDuration` INTEGER NOT NULL, `isMixed` INTEGER NOT NULL, `dateTour` INTEGER, `timeStart` INTEGER, `maxHoursPerDay` INTEGER NOT NULL, `numberPlayers` INTEGER NOT NULL, `numberCourts` INTEGER NOT NULL, `isTeamBased` INTEGER NOT NULL, `isStarted` INTEGER NOT NULL, `isFinished` INTEGER NOT NULL, `adminId` TEXT)");
         db.execSQL("CREATE TABLE IF NOT EXISTS `teams` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `tournamentId` INTEGER, `leagueId` INTEGER, `nameTeam` TEXT NOT NULL, `playerOneId` INTEGER NOT NULL, `playerTwoId` INTEGER NOT NULL, FOREIGN KEY(`tournamentId`) REFERENCES `tournaments`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE , FOREIGN KEY(`playerOneId`) REFERENCES `players`(`idplayer`) ON UPDATE NO ACTION ON DELETE RESTRICT , FOREIGN KEY(`playerTwoId`) REFERENCES `players`(`idplayer`) ON UPDATE NO ACTION ON DELETE RESTRICT , FOREIGN KEY(`leagueId`) REFERENCES `leagues`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )");
         db.execSQL("CREATE INDEX IF NOT EXISTS `index_teams_tournamentId` ON `teams` (`tournamentId`)");
         db.execSQL("CREATE INDEX IF NOT EXISTS `index_teams_playerOneId` ON `teams` (`playerOneId`)");
         db.execSQL("CREATE INDEX IF NOT EXISTS `index_teams_playerTwoId` ON `teams` (`playerTwoId`)");
         db.execSQL("CREATE INDEX IF NOT EXISTS `index_teams_leagueId` ON `teams` (`leagueId`)");
         db.execSQL("CREATE TABLE IF NOT EXISTS `matches` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `tournamentId` INTEGER, `leagueId` INTEGER, `player1Id` INTEGER NOT NULL, `player2Id` INTEGER NOT NULL, `player3Id` INTEGER NOT NULL, `player4Id` INTEGER NOT NULL, `teamOneId` INTEGER NOT NULL, `teamTwoId` INTEGER NOT NULL, `isByTime` INTEGER NOT NULL, `playStart` INTEGER, `playFinish` INTEGER, `scoreTeamOne` INTEGER NOT NULL, `scoreTeamTwo` INTEGER NOT NULL, `courtNumber` INTEGER NOT NULL, `weekNumber` INTEGER NOT NULL, `roundNumber` INTEGER NOT NULL)");
-        db.execSQL("CREATE TABLE IF NOT EXISTS `leagues` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `name` TEXT NOT NULL, `size` INTEGER NOT NULL, `weeklyMatches` INTEGER NOT NULL, `startDate` INTEGER NOT NULL, `endDate` INTEGER NOT NULL, `score` INTEGER NOT NULL, `isStarted` INTEGER NOT NULL, `matchDays` TEXT NOT NULL, `isTeamBased` INTEGER NOT NULL, `isFinished` INTEGER NOT NULL, `numberCourts` INTEGER NOT NULL)");
+        db.execSQL("CREATE TABLE IF NOT EXISTS `leagues` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `name` TEXT NOT NULL, `size` INTEGER NOT NULL, `weeklyMatches` INTEGER NOT NULL, `startDate` INTEGER NOT NULL, `endDate` INTEGER NOT NULL, `score` INTEGER NOT NULL, `isStarted` INTEGER NOT NULL, `matchDays` TEXT NOT NULL, `isTeamBased` INTEGER NOT NULL, `isFinished` INTEGER NOT NULL, `numberCourts` INTEGER NOT NULL, `adminId` TEXT)");
         db.execSQL("CREATE TABLE IF NOT EXISTS `league_players` (`leagueId` INTEGER NOT NULL, `playerId` INTEGER NOT NULL, PRIMARY KEY(`leagueId`, `playerId`), FOREIGN KEY(`leagueId`) REFERENCES `leagues`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE , FOREIGN KEY(`playerId`) REFERENCES `players`(`idplayer`) ON UPDATE NO ACTION ON DELETE CASCADE )");
         db.execSQL("CREATE INDEX IF NOT EXISTS `index_league_players_leagueId` ON `league_players` (`leagueId`)");
         db.execSQL("CREATE INDEX IF NOT EXISTS `index_league_players_playerId` ON `league_players` (`playerId`)");
@@ -76,7 +76,7 @@ public final class AppDatabase_Impl extends AppDatabase {
         db.execSQL("CREATE INDEX IF NOT EXISTS `index_tournament_players_tournamentId` ON `tournament_players` (`tournamentId`)");
         db.execSQL("CREATE INDEX IF NOT EXISTS `index_tournament_players_playerId` ON `tournament_players` (`playerId`)");
         db.execSQL("CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)");
-        db.execSQL("INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '3147d0bc48be521b8facb6f5e68ad883')");
+        db.execSQL("INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '9ab89c773abd34ade768b20211481d0e')");
       }
 
       @Override
@@ -133,7 +133,7 @@ public final class AppDatabase_Impl extends AppDatabase {
       @NonNull
       public RoomOpenHelper.ValidationResult onValidateSchema(
           @NonNull final SupportSQLiteDatabase db) {
-        final HashMap<String, TableInfo.Column> _columnsPlayers = new HashMap<String, TableInfo.Column>(10);
+        final HashMap<String, TableInfo.Column> _columnsPlayers = new HashMap<String, TableInfo.Column>(12);
         _columnsPlayers.put("idplayer", new TableInfo.Column("idplayer", "INTEGER", true, 1, null, TableInfo.CREATED_FROM_ENTITY));
         _columnsPlayers.put("name", new TableInfo.Column("name", "TEXT", true, 0, null, TableInfo.CREATED_FROM_ENTITY));
         _columnsPlayers.put("sex", new TableInfo.Column("sex", "TEXT", true, 0, null, TableInfo.CREATED_FROM_ENTITY));
@@ -143,7 +143,9 @@ public final class AppDatabase_Impl extends AppDatabase {
         _columnsPlayers.put("wintournaments", new TableInfo.Column("wintournaments", "INTEGER", true, 0, null, TableInfo.CREATED_FROM_ENTITY));
         _columnsPlayers.put("setplayed", new TableInfo.Column("setplayed", "INTEGER", true, 0, null, TableInfo.CREATED_FROM_ENTITY));
         _columnsPlayers.put("setwinner", new TableInfo.Column("setwinner", "INTEGER", true, 0, null, TableInfo.CREATED_FROM_ENTITY));
-        _columnsPlayers.put("adminid", new TableInfo.Column("adminid", "INTEGER", true, 0, null, TableInfo.CREATED_FROM_ENTITY));
+        _columnsPlayers.put("adminid", new TableInfo.Column("adminid", "TEXT", false, 0, null, TableInfo.CREATED_FROM_ENTITY));
+        _columnsPlayers.put("level", new TableInfo.Column("level", "REAL", true, 0, null, TableInfo.CREATED_FROM_ENTITY));
+        _columnsPlayers.put("photo_uri", new TableInfo.Column("photo_uri", "TEXT", false, 0, null, TableInfo.CREATED_FROM_ENTITY));
         final HashSet<TableInfo.ForeignKey> _foreignKeysPlayers = new HashSet<TableInfo.ForeignKey>(0);
         final HashSet<TableInfo.Index> _indicesPlayers = new HashSet<TableInfo.Index>(0);
         final TableInfo _infoPlayers = new TableInfo("players", _columnsPlayers, _foreignKeysPlayers, _indicesPlayers);
@@ -153,7 +155,7 @@ public final class AppDatabase_Impl extends AppDatabase {
                   + " Expected:\n" + _infoPlayers + "\n"
                   + " Found:\n" + _existingPlayers);
         }
-        final HashMap<String, TableInfo.Column> _columnsTournaments = new HashMap<String, TableInfo.Column>(14);
+        final HashMap<String, TableInfo.Column> _columnsTournaments = new HashMap<String, TableInfo.Column>(16);
         _columnsTournaments.put("id", new TableInfo.Column("id", "INTEGER", true, 1, null, TableInfo.CREATED_FROM_ENTITY));
         _columnsTournaments.put("name", new TableInfo.Column("name", "TEXT", true, 0, null, TableInfo.CREATED_FROM_ENTITY));
         _columnsTournaments.put("type", new TableInfo.Column("type", "TEXT", true, 0, null, TableInfo.CREATED_FROM_ENTITY));
@@ -166,8 +168,10 @@ public final class AppDatabase_Impl extends AppDatabase {
         _columnsTournaments.put("maxHoursPerDay", new TableInfo.Column("maxHoursPerDay", "INTEGER", true, 0, null, TableInfo.CREATED_FROM_ENTITY));
         _columnsTournaments.put("numberPlayers", new TableInfo.Column("numberPlayers", "INTEGER", true, 0, null, TableInfo.CREATED_FROM_ENTITY));
         _columnsTournaments.put("numberCourts", new TableInfo.Column("numberCourts", "INTEGER", true, 0, null, TableInfo.CREATED_FROM_ENTITY));
+        _columnsTournaments.put("isTeamBased", new TableInfo.Column("isTeamBased", "INTEGER", true, 0, null, TableInfo.CREATED_FROM_ENTITY));
         _columnsTournaments.put("isStarted", new TableInfo.Column("isStarted", "INTEGER", true, 0, null, TableInfo.CREATED_FROM_ENTITY));
         _columnsTournaments.put("isFinished", new TableInfo.Column("isFinished", "INTEGER", true, 0, null, TableInfo.CREATED_FROM_ENTITY));
+        _columnsTournaments.put("adminId", new TableInfo.Column("adminId", "TEXT", false, 0, null, TableInfo.CREATED_FROM_ENTITY));
         final HashSet<TableInfo.ForeignKey> _foreignKeysTournaments = new HashSet<TableInfo.ForeignKey>(0);
         final HashSet<TableInfo.Index> _indicesTournaments = new HashSet<TableInfo.Index>(0);
         final TableInfo _infoTournaments = new TableInfo("tournaments", _columnsTournaments, _foreignKeysTournaments, _indicesTournaments);
@@ -228,7 +232,7 @@ public final class AppDatabase_Impl extends AppDatabase {
                   + " Expected:\n" + _infoMatches + "\n"
                   + " Found:\n" + _existingMatches);
         }
-        final HashMap<String, TableInfo.Column> _columnsLeagues = new HashMap<String, TableInfo.Column>(12);
+        final HashMap<String, TableInfo.Column> _columnsLeagues = new HashMap<String, TableInfo.Column>(13);
         _columnsLeagues.put("id", new TableInfo.Column("id", "INTEGER", true, 1, null, TableInfo.CREATED_FROM_ENTITY));
         _columnsLeagues.put("name", new TableInfo.Column("name", "TEXT", true, 0, null, TableInfo.CREATED_FROM_ENTITY));
         _columnsLeagues.put("size", new TableInfo.Column("size", "INTEGER", true, 0, null, TableInfo.CREATED_FROM_ENTITY));
@@ -241,6 +245,7 @@ public final class AppDatabase_Impl extends AppDatabase {
         _columnsLeagues.put("isTeamBased", new TableInfo.Column("isTeamBased", "INTEGER", true, 0, null, TableInfo.CREATED_FROM_ENTITY));
         _columnsLeagues.put("isFinished", new TableInfo.Column("isFinished", "INTEGER", true, 0, null, TableInfo.CREATED_FROM_ENTITY));
         _columnsLeagues.put("numberCourts", new TableInfo.Column("numberCourts", "INTEGER", true, 0, null, TableInfo.CREATED_FROM_ENTITY));
+        _columnsLeagues.put("adminId", new TableInfo.Column("adminId", "TEXT", false, 0, null, TableInfo.CREATED_FROM_ENTITY));
         final HashSet<TableInfo.ForeignKey> _foreignKeysLeagues = new HashSet<TableInfo.ForeignKey>(0);
         final HashSet<TableInfo.Index> _indicesLeagues = new HashSet<TableInfo.Index>(0);
         final TableInfo _infoLeagues = new TableInfo("leagues", _columnsLeagues, _foreignKeysLeagues, _indicesLeagues);
@@ -303,7 +308,7 @@ public final class AppDatabase_Impl extends AppDatabase {
         }
         return new RoomOpenHelper.ValidationResult(true, null);
       }
-    }, "3147d0bc48be521b8facb6f5e68ad883", "b0358bd290abb22bac17429762ffe335");
+    }, "9ab89c773abd34ade768b20211481d0e", "f8ca18ac7dfff7e5ac55ee5e1d3d574f");
     final SupportSQLiteOpenHelper.Configuration _sqliteConfig = SupportSQLiteOpenHelper.Configuration.builder(config.context).name(config.name).callback(_openCallback).build();
     final SupportSQLiteOpenHelper _helper = config.sqliteOpenHelperFactory.create(_sqliteConfig);
     return _helper;

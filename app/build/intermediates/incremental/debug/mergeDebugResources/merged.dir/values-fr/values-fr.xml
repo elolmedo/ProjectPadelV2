@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:ns1="urn:oasis:names:tc:xliff:document:1.2">
     <string name="add">Ajouter</string>
+    <string msgid="8397015543330865059" name="android.credentials.TYPE_PASSWORD_CREDENTIAL">"Mot de passe"</string>
+    <string msgid="3929015085059320822" name="androidx.credentials.TYPE_PUBLIC_KEY_CREDENTIAL">"Clé d\'accès"</string>
     <string name="app_name">PADEL PRO</string>
     <string name="back">Retour</string>
     <string msgid="6128938260108474660" name="bottom_sheet_collapse_description">"Réduire la bottom sheet"</string>
@@ -18,7 +20,26 @@
     <string msgid="406453423630273620" name="close_drawer">"Fermer le menu de navigation"</string>
     <string msgid="7573152094250666567" name="close_sheet">"Fermer la feuille"</string>
     <string msgid="5389587048670450460" name="collapsed">"Réduit"</string>
+    <string msgid="2523291102206661146" name="common_google_play_services_enable_button">Activer</string>
+    <string msgid="227660514972886228" name="common_google_play_services_enable_text">%1$s ne fonctionnera pas tant que vous n\'aurez pas activé les services Google Play.</string>
+    <string msgid="5122002158466380389" name="common_google_play_services_enable_title">Activer les services Google Play</string>
+    <string msgid="7153882981874058840" name="common_google_play_services_install_button">Installer</string>
+    <string name="common_google_play_services_install_text">%1$s ne fonctionnera pas sans les services Google Play, qui ne sont pas installés sur votre appareil.</string>
+    <string msgid="7215213145546190223" name="common_google_play_services_install_title">Installer les services Google Play</string>
+    <string name="common_google_play_services_notification_channel_name">Disponibilité des services Google Play</string>
+    <string name="common_google_play_services_notification_ticker">Erreur liée aux services Google Play</string>
+    <string name="common_google_play_services_unknown_issue">L\'application %1$s rencontre des problèmes avec les services Google Play. Veuillez réessayer.</string>
+    <string name="common_google_play_services_unsupported_text">%1$s ne fonctionnera pas sans les services Google Play, qui ne sont pas compatibles avec votre appareil.</string>
+    <string msgid="6556509956452265614" name="common_google_play_services_update_button">Mettre à jour</string>
+    <string msgid="9053896323427875356" name="common_google_play_services_update_text">%1$s ne fonctionnera pas tant que vous n\'aurez pas mis à jour les services Google Play.</string>
+    <string msgid="6006316683626838685" name="common_google_play_services_update_title">Mettre à jour les services Google Play</string>
+    <string name="common_google_play_services_updating_text">%1$s ne fonctionnera pas sans les services Google Play, qui sont en cours de mise à jour.</string>
+    <string name="common_google_play_services_wear_update_text">La nouvelle version des services Google Play est nécessaire. Elle sera bientôt installée automatiquement.</string>
+    <string name="common_open_on_phone">Ouvrir sur le téléphone</string>
+    <string name="common_signin_button_text">Se connecter</string>
+    <string name="common_signin_button_text_long">Se connecter avec Google</string>
     <string name="confirm">Confirmer</string>
+    <string msgid="3260749812566568062" name="copy_toast_msg">"Lien copié dans le presse-papiers"</string>
     <string name="courts">Terrains</string>
     <string msgid="3499643850558715142" name="date_input_headline">"Date saisie"</string>
     <string msgid="8562356184193964298" name="date_input_headline_description">"Date saisie : %1$s"</string>
@@ -63,10 +84,15 @@
     <string name="empty_players">Aucun joueur.</string>
     <string name="empty_tournaments">Aucun tournoi.</string>
     <string msgid="5974471714631304645" name="expanded">"Développé"</string>
+    <string msgid="4566929209979330987" name="fallback_menu_item_copy_link">"Copier le lien"</string>
+    <string msgid="3413186855122069269" name="fallback_menu_item_open_in_browser">"Ouvrir dans un navigateur"</string>
+    <string msgid="7145444925855055364" name="fallback_menu_item_share_link">"Partager le lien"</string>
     <string name="filter_all">Tous</string>
     <string name="filter_round">Journée</string>
     <string name="filter_week">Semaine</string>
     <string name="finish">Terminer</string>
+    <string name="fixed_teams">Équipes Fixes</string>
+    <string name="format">Format</string>
     <string msgid="6827826412747255547" name="in_progress">"En cours"</string>
     <string msgid="7933458017204019916" name="indeterminate">"Partiellement coché"</string>
     <string name="later">Plus tard</string>
@@ -86,9 +112,13 @@
     <string name="pro_version">Version Premium</string>
     <string msgid="5941395253238309765" name="range_end">"Fin de plage"</string>
     <string msgid="7097486360902471446" name="range_start">"Début de plage"</string>
+    <string name="reset_general_ranking">Réinitialiser Général</string>
+    <string name="reset_ranking_confirm">Voulez-vous réinitialiser TOUT le classement général ? Tous les points accumulés seront supprimés.</string>
+    <string name="rotation">Rotation</string>
     <string name="save">Enregistrer</string>
     <string msgid="6420018528474762666" name="search_bar_search">"Rechercher"</string>
     <string msgid="6043586758067023" name="selected">"Sélectionné"</string>
+    <string name="setup_teams">Configurer les Équipes</string>
     <string name="simulate_results">Simuler les résultats</string>
     <string msgid="3962933905051144957" name="snackbar_dismiss">"Ignorer"</string>
     <string name="start">Démarrer</string>
@@ -119,6 +149,8 @@
     <string msgid="994099543833979061" name="time_picker_minute_text_field">"en minutes"</string>
     <string msgid="7352665290700284516" name="time_picker_period_toggle_description">"Sélectionner le format AM ou PM"</string>
     <string msgid="2232702812657998674" name="time_picker_pm">"PM"</string>
+    <string msgid="3765533235322692011" name="tooltip_description">"Info-bulle"</string>
+    <string msgid="3124740595719787496" name="tooltip_label">"Afficher l\'info-bulle"</string>
     <string msgid="2732804537909054941" name="tooltip_long_press_label">"Afficher l\'info-bulle"</string>
     <string msgid="8191239805703103845" name="tooltip_pane_description">"Info-bulle"</string>
     <string name="update_score">Mettre à jour le score</string>

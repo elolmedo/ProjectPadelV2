@@ -35,5 +35,11 @@ data class Player(
     val setsWon: Int = 0,
     
     @ColumnInfo(name = "adminid")
-    val adminId: Int = 0
+    val adminId: String? = null,
+    
+    @ColumnInfo(name = "level")
+    val level: Double = 3.0,
+
+    @ColumnInfo(name = "photo_uri")
+    val photoUri: String? = null
 )

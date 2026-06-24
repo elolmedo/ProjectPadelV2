@@ -17,6 +17,8 @@
     <string name="filter_round">Jornada</string>
     <string name="filter_week">Setmana</string>
     <string name="finish">Finalitzar</string>
+    <string name="fixed_teams">Parelles Fixes</string>
+    <string name="format">Format</string>
     <string name="later">Més tard</string>
     <string name="match_duration">Durada (min)</string>
     <string name="name">Nom</string>
@@ -28,7 +30,11 @@
     <string name="phone">Telèfon</string>
     <string name="pro_limit_reached">Has assolit el límit de la versió gratuïta. Passa\'t a PRO per crear jugadors i tornejos il·limitats!</string>
     <string name="pro_version">Versió Premium</string>
+    <string name="reset_general_ranking">Reiniciar General</string>
+    <string name="reset_ranking_confirm">Vols reiniciar TOT el rànquing general? Se suprimiran tots els punts acumulats.</string>
+    <string name="rotation">Rotació</string>
     <string name="save">Desar</string>
+    <string name="setup_teams">Configurar Parelles</string>
     <string name="simulate_results">Simular Resultats</string>
     <string name="start">Iniciar</string>
     <string name="start_date">Data d\'Inici</string>

@@ -21,8 +21,10 @@ data class Tournament(
     val maxHoursPerDay: Int = 4,
     val numberPlayers: Int = 0,
     val numberCourts: Int = 0,
+    val isTeamBased: Boolean = false,
     val isStarted: Boolean = false,
-    val isFinished: Boolean = false
+    val isFinished: Boolean = false,
+    val adminId: String? = null
 )
 
 @Entity(

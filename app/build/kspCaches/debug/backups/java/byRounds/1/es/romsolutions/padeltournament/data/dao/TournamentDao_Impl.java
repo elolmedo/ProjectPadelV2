@@ -51,7 +51,7 @@ public final class TournamentDao_Impl implements TournamentDao {
       @Override
       @NonNull
       protected String createQuery() {
-        return "INSERT OR REPLACE INTO `tournaments` (`id`,`name`,`type`,`scoreType`,`numSets`,`matchDuration`,`isMixed`,`dateTour`,`timeStart`,`maxHoursPerDay`,`numberPlayers`,`numberCourts`,`isStarted`,`isFinished`) VALUES (nullif(?, 0),?,?,?,?,?,?,?,?,?,?,?,?,?)";
+        return "INSERT OR REPLACE INTO `tournaments` (`id`,`name`,`type`,`scoreType`,`numSets`,`matchDuration`,`isMixed`,`dateTour`,`timeStart`,`maxHoursPerDay`,`numberPlayers`,`numberCourts`,`isTeamBased`,`isStarted`,`isFinished`,`adminId`) VALUES (nullif(?, 0),?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
       }
 
       @Override
@@ -78,10 +78,17 @@ public final class TournamentDao_Impl implements TournamentDao {
         statement.bindLong(10, entity.getMaxHoursPerDay());
         statement.bindLong(11, entity.getNumberPlayers());
         statement.bindLong(12, entity.getNumberCourts());
-        final int _tmp_1 = entity.isStarted() ? 1 : 0;
+        final int _tmp_1 = entity.isTeamBased() ? 1 : 0;
         statement.bindLong(13, _tmp_1);
-        final int _tmp_2 = entity.isFinished() ? 1 : 0;
+        final int _tmp_2 = entity.isStarted() ? 1 : 0;
         statement.bindLong(14, _tmp_2);
+        final int _tmp_3 = entity.isFinished() ? 1 : 0;
+        statement.bindLong(15, _tmp_3);
+        if (entity.getAdminId() == null) {
+          statement.bindNull(16);
+        } else {
+          statement.bindString(16, entity.getAdminId());
+        }
       }
     };
     this.__insertionAdapterOfTournamentPlayerCrossRef = new EntityInsertionAdapter<TournamentPlayerCrossRef>(__db) {
@@ -115,7 +122,7 @@ public final class TournamentDao_Impl implements TournamentDao {
       @Override
       @NonNull
       protected String createQuery() {
-        return "UPDATE OR ABORT `tournaments` SET `id` = ?,`name` = ?,`type` = ?,`scoreType` = ?,`numSets` = ?,`matchDuration` = ?,`isMixed` = ?,`dateTour` = ?,`timeStart` = ?,`maxHoursPerDay` = ?,`numberPlayers` = ?,`numberCourts` = ?,`isStarted` = ?,`isFinished` = ? WHERE `id` = ?";
+        return "UPDATE OR ABORT `tournaments` SET `id` = ?,`name` = ?,`type` = ?,`scoreType` = ?,`numSets` = ?,`matchDuration` = ?,`isMixed` = ?,`dateTour` = ?,`timeStart` = ?,`maxHoursPerDay` = ?,`numberPlayers` = ?,`numberCourts` = ?,`isTeamBased` = ?,`isStarted` = ?,`isFinished` = ?,`adminId` = ? WHERE `id` = ?";
       }
 
       @Override
@@ -142,11 +149,18 @@ public final class TournamentDao_Impl implements TournamentDao {
         statement.bindLong(10, entity.getMaxHoursPerDay());
         statement.bindLong(11, entity.getNumberPlayers());
         statement.bindLong(12, entity.getNumberCourts());
-        final int _tmp_1 = entity.isStarted() ? 1 : 0;
+        final int _tmp_1 = entity.isTeamBased() ? 1 : 0;
         statement.bindLong(13, _tmp_1);
-        final int _tmp_2 = entity.isFinished() ? 1 : 0;
+        final int _tmp_2 = entity.isStarted() ? 1 : 0;
         statement.bindLong(14, _tmp_2);
-        statement.bindLong(15, entity.getId());
+        final int _tmp_3 = entity.isFinished() ? 1 : 0;
+        statement.bindLong(15, _tmp_3);
+        if (entity.getAdminId() == null) {
+          statement.bindNull(16);
+        } else {
+          statement.bindString(16, entity.getAdminId());
+        }
+        statement.bindLong(17, entity.getId());
       }
     };
   }
@@ -231,9 +245,15 @@ public final class TournamentDao_Impl implements TournamentDao {
   }
 
   @Override
-  public Flow<List<Tournament>> getAllTournaments() {
-    final String _sql = "SELECT * FROM tournaments ORDER BY dateTour DESC";
-    final RoomSQLiteQuery _statement = RoomSQLiteQuery.acquire(_sql, 0);
+  public Flow<List<Tournament>> getTournamentsByAdmin(final String adminId) {
+    final String _sql = "SELECT * FROM tournaments WHERE adminId = ? OR adminId IS NULL ORDER BY dateTour DESC";
+    final RoomSQLiteQuery _statement = RoomSQLiteQuery.acquire(_sql, 1);
+    int _argIndex = 1;
+    if (adminId == null) {
+      _statement.bindNull(_argIndex);
+    } else {
+      _statement.bindString(_argIndex, adminId);
+    }
     return CoroutinesRoom.createFlow(__db, false, new String[] {"tournaments"}, new Callable<List<Tournament>>() {
       @Override
       @NonNull
@@ -252,8 +272,10 @@ public final class TournamentDao_Impl implements TournamentDao {
           final int _cursorIndexOfMaxHoursPerDay = CursorUtil.getColumnIndexOrThrow(_cursor, "maxHoursPerDay");
           final int _cursorIndexOfNumberPlayers = CursorUtil.getColumnIndexOrThrow(_cursor, "numberPlayers");
           final int _cursorIndexOfNumberCourts = CursorUtil.getColumnIndexOrThrow(_cursor, "numberCourts");
+          final int _cursorIndexOfIsTeamBased = CursorUtil.getColumnIndexOrThrow(_cursor, "isTeamBased");
           final int _cursorIndexOfIsStarted = CursorUtil.getColumnIndexOrThrow(_cursor, "isStarted");
           final int _cursorIndexOfIsFinished = CursorUtil.getColumnIndexOrThrow(_cursor, "isFinished");
+          final int _cursorIndexOfAdminId = CursorUtil.getColumnIndexOrThrow(_cursor, "adminId");
           final List<Tournament> _result = new ArrayList<Tournament>(_cursor.getCount());
           while (_cursor.moveToNext()) {
             final Tournament _item;
@@ -291,15 +313,25 @@ public final class TournamentDao_Impl implements TournamentDao {
             _tmpNumberPlayers = _cursor.getInt(_cursorIndexOfNumberPlayers);
             final int _tmpNumberCourts;
             _tmpNumberCourts = _cursor.getInt(_cursorIndexOfNumberCourts);
-            final boolean _tmpIsStarted;
+            final boolean _tmpIsTeamBased;
             final int _tmp_1;
-            _tmp_1 = _cursor.getInt(_cursorIndexOfIsStarted);
-            _tmpIsStarted = _tmp_1 != 0;
-            final boolean _tmpIsFinished;
+            _tmp_1 = _cursor.getInt(_cursorIndexOfIsTeamBased);
+            _tmpIsTeamBased = _tmp_1 != 0;
+            final boolean _tmpIsStarted;
             final int _tmp_2;
-            _tmp_2 = _cursor.getInt(_cursorIndexOfIsFinished);
-            _tmpIsFinished = _tmp_2 != 0;
-            _item = new Tournament(_tmpId,_tmpName,_tmpType,_tmpScoreType,_tmpNumSets,_tmpMatchDuration,_tmpIsMixed,_tmpDateTour,_tmpTimeStart,_tmpMaxHoursPerDay,_tmpNumberPlayers,_tmpNumberCourts,_tmpIsStarted,_tmpIsFinished);
+            _tmp_2 = _cursor.getInt(_cursorIndexOfIsStarted);
+            _tmpIsStarted = _tmp_2 != 0;
+            final boolean _tmpIsFinished;
+            final int _tmp_3;
+            _tmp_3 = _cursor.getInt(_cursorIndexOfIsFinished);
+            _tmpIsFinished = _tmp_3 != 0;
+            final String _tmpAdminId;
+            if (_cursor.isNull(_cursorIndexOfAdminId)) {
+              _tmpAdminId = null;
+            } else {
+              _tmpAdminId = _cursor.getString(_cursorIndexOfAdminId);
+            }
+            _item = new Tournament(_tmpId,_tmpName,_tmpType,_tmpScoreType,_tmpNumSets,_tmpMatchDuration,_tmpIsMixed,_tmpDateTour,_tmpTimeStart,_tmpMaxHoursPerDay,_tmpNumberPlayers,_tmpNumberCourts,_tmpIsTeamBased,_tmpIsStarted,_tmpIsFinished,_tmpAdminId);
             _result.add(_item);
           }
           return _result;
@@ -341,8 +373,10 @@ public final class TournamentDao_Impl implements TournamentDao {
           final int _cursorIndexOfMaxHoursPerDay = CursorUtil.getColumnIndexOrThrow(_cursor, "maxHoursPerDay");
           final int _cursorIndexOfNumberPlayers = CursorUtil.getColumnIndexOrThrow(_cursor, "numberPlayers");
           final int _cursorIndexOfNumberCourts = CursorUtil.getColumnIndexOrThrow(_cursor, "numberCourts");
+          final int _cursorIndexOfIsTeamBased = CursorUtil.getColumnIndexOrThrow(_cursor, "isTeamBased");
           final int _cursorIndexOfIsStarted = CursorUtil.getColumnIndexOrThrow(_cursor, "isStarted");
           final int _cursorIndexOfIsFinished = CursorUtil.getColumnIndexOrThrow(_cursor, "isFinished");
+          final int _cursorIndexOfAdminId = CursorUtil.getColumnIndexOrThrow(_cursor, "adminId");
           final Tournament _result;
           if (_cursor.moveToFirst()) {
             final int _tmpId;
@@ -379,15 +413,25 @@ public final class TournamentDao_Impl implements TournamentDao {
             _tmpNumberPlayers = _cursor.getInt(_cursorIndexOfNumberPlayers);
             final int _tmpNumberCourts;
             _tmpNumberCourts = _cursor.getInt(_cursorIndexOfNumberCourts);
-            final boolean _tmpIsStarted;
+            final boolean _tmpIsTeamBased;
             final int _tmp_1;
-            _tmp_1 = _cursor.getInt(_cursorIndexOfIsStarted);
-            _tmpIsStarted = _tmp_1 != 0;
-            final boolean _tmpIsFinished;
+            _tmp_1 = _cursor.getInt(_cursorIndexOfIsTeamBased);
+            _tmpIsTeamBased = _tmp_1 != 0;
+            final boolean _tmpIsStarted;
             final int _tmp_2;
-            _tmp_2 = _cursor.getInt(_cursorIndexOfIsFinished);
-            _tmpIsFinished = _tmp_2 != 0;
-            _result = new Tournament(_tmpId,_tmpName,_tmpType,_tmpScoreType,_tmpNumSets,_tmpMatchDuration,_tmpIsMixed,_tmpDateTour,_tmpTimeStart,_tmpMaxHoursPerDay,_tmpNumberPlayers,_tmpNumberCourts,_tmpIsStarted,_tmpIsFinished);
+            _tmp_2 = _cursor.getInt(_cursorIndexOfIsStarted);
+            _tmpIsStarted = _tmp_2 != 0;
+            final boolean _tmpIsFinished;
+            final int _tmp_3;
+            _tmp_3 = _cursor.getInt(_cursorIndexOfIsFinished);
+            _tmpIsFinished = _tmp_3 != 0;
+            final String _tmpAdminId;
+            if (_cursor.isNull(_cursorIndexOfAdminId)) {
+              _tmpAdminId = null;
+            } else {
+              _tmpAdminId = _cursor.getString(_cursorIndexOfAdminId);
+            }
+            _result = new Tournament(_tmpId,_tmpName,_tmpType,_tmpScoreType,_tmpNumSets,_tmpMatchDuration,_tmpIsMixed,_tmpDateTour,_tmpTimeStart,_tmpMaxHoursPerDay,_tmpNumberPlayers,_tmpNumberCourts,_tmpIsTeamBased,_tmpIsStarted,_tmpIsFinished,_tmpAdminId);
           } else {
             _result = null;
           }

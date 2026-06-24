@@ -24,6 +24,12 @@ interface MatchDao {
     @Update
     suspend fun update(match: Match)
 
+    @Query("SELECT * FROM matches WHERE tournamentId = :tournamentId")
+    suspend fun getMatchesByTournamentSync(tournamentId: Int): List<Match>
+
+    @Query("SELECT * FROM matches WHERE leagueId = :leagueId")
+    suspend fun getMatchesByLeagueSync(leagueId: Int): List<Match>
+
     @Delete
     suspend fun delete(match: Match)
 }

@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:ns1="urn:oasis:names:tc:xliff:document:1.2">
+    <string msgid="8397015543330865059" name="android.credentials.TYPE_PASSWORD_CREDENTIAL">"Parole"</string>
+    <string msgid="3929015085059320822" name="androidx.credentials.TYPE_PUBLIC_KEY_CREDENTIAL">"Piekļuves atslēga"</string>
     <string msgid="6128938260108474660" name="bottom_sheet_collapse_description">"Sakļaut ekrāna apakšdaļas lapu"</string>
     <string msgid="1918297411568599192" name="bottom_sheet_dismiss_description">"Noraidīt ekrāna apakšdaļas lapu"</string>
     <string msgid="7772321844937772780" name="bottom_sheet_drag_handle_description">"Vilkšanas turis"</string>
@@ -14,6 +16,25 @@
     <string msgid="406453423630273620" name="close_drawer">"Aizvērt navigācijas izvēlni"</string>
     <string msgid="7573152094250666567" name="close_sheet">"Aizvērt izklājlapu"</string>
     <string msgid="5389587048670450460" name="collapsed">"Sakļauts"</string>
+    <string msgid="2523291102206661146" name="common_google_play_services_enable_button">Iespējot</string>
+    <string msgid="227660514972886228" name="common_google_play_services_enable_text">Lai lietotne %1$s darbotos, ir jāiespējo Google Play pakalpojumi.</string>
+    <string msgid="5122002158466380389" name="common_google_play_services_enable_title">Google Play pakalpojumu iespējošana</string>
+    <string msgid="7153882981874058840" name="common_google_play_services_install_button">Instalēt</string>
+    <string name="common_google_play_services_install_text">Lai lietotne %1$s darbotos, ierīcē ir jāinstalē Google Play pakalpojumi.</string>
+    <string msgid="7215213145546190223" name="common_google_play_services_install_title">Google Play pakalpojumu iegūšana</string>
+    <string name="common_google_play_services_notification_channel_name">Google Play pakalpojumu pieejamība</string>
+    <string name="common_google_play_services_notification_ticker">Google Play pakalpojumu kļūda</string>
+    <string name="common_google_play_services_unknown_issue">Lietotnē %1$s ir radusies problēma ar Google Play pakalpojumu darbību. Lūdzu, mēģiniet vēlreiz.</string>
+    <string name="common_google_play_services_unsupported_text">Lai lietotne %1$s darbotos, ir nepieciešami Google Play pakalpojumi, taču jūsu ierīce tos neatbalsta.</string>
+    <string msgid="6556509956452265614" name="common_google_play_services_update_button">Atjaunināt</string>
+    <string msgid="9053896323427875356" name="common_google_play_services_update_text">Lai lietotne %1$s darbotos, jums ir jāatjaunina Google Play pakalpojumi.</string>
+    <string msgid="6006316683626838685" name="common_google_play_services_update_title">Google Play pakalpojumu atjaunināšana</string>
+    <string name="common_google_play_services_updating_text">Lai lietotne %1$s darbotos, ir jāinstalē Google Play pakalpojumi. Pašlaik notiek to atjaunināšana.</string>
+    <string name="common_google_play_services_wear_update_text">Ir nepieciešama jauna Google Play pakalpojumu versija. Drīzumā tā tiks instalēta.</string>
+    <string name="common_open_on_phone">Atvērt tālrunī</string>
+    <string name="common_signin_button_text">Pierakstīties</string>
+    <string name="common_signin_button_text_long">Pierakstīties ar Google kontu</string>
+    <string msgid="3260749812566568062" name="copy_toast_msg">"Saite ir kopēta starpliktuvē."</string>
     <string msgid="3499643850558715142" name="date_input_headline">"Ievadītais datums"</string>
     <string msgid="8562356184193964298" name="date_input_headline_description">"Ievadītais datums: %1$s"</string>
     <string msgid="5281836720766682161" name="date_input_invalid_for_pattern">"Datums neatbilst paredzētajam formātam: %1$s"</string>
@@ -50,6 +71,9 @@
     <string msgid="4057925834421392736" name="dialog">"Dialoglodziņš"</string>
     <string msgid="1890207353314751437" name="dropdown_menu">"Nolaižamā izvēlne"</string>
     <string msgid="5974471714631304645" name="expanded">"Izvērsts"</string>
+    <string msgid="4566929209979330987" name="fallback_menu_item_copy_link">"Kopēt saiti"</string>
+    <string msgid="3413186855122069269" name="fallback_menu_item_open_in_browser">"Atvērt pārlūkprogrammā"</string>
+    <string msgid="7145444925855055364" name="fallback_menu_item_share_link">"Kopīgot saiti"</string>
     <string msgid="6827826412747255547" name="in_progress">"Notiek apstrāde"</string>
     <string msgid="7933458017204019916" name="indeterminate">"Daļēji atzīmēta"</string>
     <string msgid="542007171693138492" name="navigation_menu">"Navigācijas izvēlne"</string>
@@ -78,6 +102,8 @@
     <string msgid="994099543833979061" name="time_picker_minute_text_field">"(minūtes)"</string>
     <string msgid="7352665290700284516" name="time_picker_period_toggle_description">"Atlasīt “AM” (priekšpusdienā) vai “PM” (pēcpusdienā)"</string>
     <string msgid="2232702812657998674" name="time_picker_pm">"PM"</string>
+    <string msgid="3765533235322692011" name="tooltip_description">"rīka padoms"</string>
+    <string msgid="3124740595719787496" name="tooltip_label">"rādīt rīka padomu"</string>
     <string msgid="2732804537909054941" name="tooltip_long_press_label">"Rādīt rīka padomu"</string>
     <string msgid="8191239805703103845" name="tooltip_pane_description">"Rīka padoms"</string>
 </resources>

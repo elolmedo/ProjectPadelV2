@@ -44,3 +44,5 @@ data class Team(
     val playerOneId: Int,
     val playerTwoId: Int
 )
+
+data class TeamInput(val name: String, val player1Id: Int, val player2Id: Int)

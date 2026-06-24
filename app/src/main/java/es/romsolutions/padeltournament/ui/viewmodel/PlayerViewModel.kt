@@ -12,14 +12,26 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.flatMapLatest
+
 class PlayerViewModel(private val repository: PlayerRepository) : ViewModel() {
 
-    val allPlayers: StateFlow<List<Player>> = repository.allPlayers
+    private val adminIdFlow = MutableStateFlow<String?>(null)
+
+    val allPlayers: StateFlow<List<Player>> = adminIdFlow
+        .flatMapLatest { adminId ->
+            repository.getPlayersByAdmin(adminId)
+        }
         .stateIn(
             scope = viewModelScope,
             started = SharingStarted.WhileSubscribed(5000),
             initialValue = emptyList()
         )
+
+    fun setAdminId(adminId: String?) {
+        adminIdFlow.value = adminId
+    }
 
     fun insert(player: Player) = viewModelScope.launch {
         repository.insert(player)

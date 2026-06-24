@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:ns1="urn:oasis:names:tc:xliff:document:1.2">
+    <string msgid="8397015543330865059" name="android.credentials.TYPE_PASSWORD_CREDENTIAL">"Password"</string>
+    <string msgid="3929015085059320822" name="androidx.credentials.TYPE_PUBLIC_KEY_CREDENTIAL">"Passkey"</string>
     <string msgid="6128938260108474660" name="bottom_sheet_collapse_description">"Collapse bottom sheet"</string>
     <string msgid="1918297411568599192" name="bottom_sheet_dismiss_description">"Dismiss bottom sheet"</string>
     <string msgid="7772321844937772780" name="bottom_sheet_drag_handle_description">"Drag handle"</string>
@@ -14,6 +16,7 @@
     <string msgid="406453423630273620" name="close_drawer">"Close navigation menu"</string>
     <string msgid="7573152094250666567" name="close_sheet">"Close sheet"</string>
     <string msgid="5389587048670450460" name="collapsed">"Collapsed"</string>
+    <string msgid="3260749812566568062" name="copy_toast_msg">"Link copied to clipboard"</string>
     <string msgid="3499643850558715142" name="date_input_headline">"Entered date"</string>
     <string msgid="8562356184193964298" name="date_input_headline_description">"Entered date: %1$s"</string>
     <string msgid="5281836720766682161" name="date_input_invalid_for_pattern">"Date does not match expected pattern: %1$s"</string>
@@ -50,6 +53,9 @@
     <string msgid="4057925834421392736" name="dialog">"Dialogue"</string>
     <string msgid="1890207353314751437" name="dropdown_menu">"Drop-down menu"</string>
     <string msgid="5974471714631304645" name="expanded">"Expanded"</string>
+    <string msgid="4566929209979330987" name="fallback_menu_item_copy_link">"Copy link"</string>
+    <string msgid="3413186855122069269" name="fallback_menu_item_open_in_browser">"Open in browser"</string>
+    <string msgid="7145444925855055364" name="fallback_menu_item_share_link">"Share link"</string>
     <string msgid="6827826412747255547" name="in_progress">"In progress"</string>
     <string msgid="7933458017204019916" name="indeterminate">"Partially ticked"</string>
     <string msgid="542007171693138492" name="navigation_menu">"Navigation menu"</string>
@@ -78,6 +84,8 @@
     <string msgid="994099543833979061" name="time_picker_minute_text_field">"for minutes"</string>
     <string msgid="7352665290700284516" name="time_picker_period_toggle_description">"Select a.m. or p.m."</string>
     <string msgid="2232702812657998674" name="time_picker_pm">"PM"</string>
+    <string msgid="3765533235322692011" name="tooltip_description">"tooltip"</string>
+    <string msgid="3124740595719787496" name="tooltip_label">"show tooltip"</string>
     <string msgid="2732804537909054941" name="tooltip_long_press_label">"Show tooltip"</string>
     <string msgid="8191239805703103845" name="tooltip_pane_description">"Tooltip"</string>
 </resources>
