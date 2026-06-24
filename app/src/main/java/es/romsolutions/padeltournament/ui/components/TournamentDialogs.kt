@@ -85,9 +85,9 @@ fun AddTournamentDialog(
                 
                 Text("Tipo de Torneo", style = MaterialTheme.typography.titleSmall)
                 Column {
-                    listOf("AMERICANA", "EXPRESS", "POZO").forEach { type ->
-                        Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.clickable { selectedType = type }) {
-                            RadioButton(selected = selectedType == type, onClick = { selectedType = type })
+                    listOf("AMERICANA", "EXPRESS", "Rey de la Pista").forEach { type ->
+                        Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.clickable { selectedType = if (type == "Rey de la Pista") "POZO" else type }) {
+                            RadioButton(selected = (selectedType == type || (selectedType == "POZO" && type == "Rey de la Pista")), onClick = { selectedType = if (type == "Rey de la Pista") "POZO" else type })
                             Text(text = type)
                         }
                     }

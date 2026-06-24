@@ -4,6 +4,9 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.MilitaryTech
@@ -58,9 +61,11 @@ fun TournamentsListScreen(
             )
         }
 
-        LazyColumn(
+        LazyVerticalGrid(
+            columns = GridCells.Adaptive(minSize = 300.dp),
             modifier = Modifier.fillMaxSize(),
-            verticalArrangement = Arrangement.spacedBy(8.dp)
+            verticalArrangement = Arrangement.spacedBy(8.dp),
+            horizontalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             items(tournaments) { tournament ->
                 Card(
@@ -71,7 +76,8 @@ fun TournamentsListScreen(
                     Row(modifier = Modifier.padding(16.dp), verticalAlignment = Alignment.CenterVertically) {
                         Column(modifier = Modifier.weight(1f)) {
                             Text(text = tournament.name, style = MaterialTheme.typography.titleLarge, color = MaterialTheme.colorScheme.primary)
-                            Text(text = "Tipo: ${tournament.type} | Pistas: ${tournament.numberCourts}")
+                            val displayType = if (tournament.type == "POZO") "Rey de la Pista" else tournament.type
+                            Text(text = "Tipo: $displayType | Pistas: ${tournament.numberCourts}")
                             Text(text = "Inicio: ${sdf.format(Date(tournament.dateTour ?: 0))}")
                             val status = if (tournament.isFinished) "FINALIZADO" else if (tournament.isStarted) "EN CURSO" else "PENDIENTE"
                             Text(

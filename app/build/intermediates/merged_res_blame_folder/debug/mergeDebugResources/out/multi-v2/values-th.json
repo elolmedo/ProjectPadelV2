@@ -1,7 +1,7 @@
 {
     "logs": [
         {
-            "outputFile": "es.romsolutions.padeltournament.app-mergeDebugResources-70:/values-th/values-th.xml",
+            "outputFile": "es.romsolutions.padeltournament.app-mergeDebugResources-72:/values-th/values-th.xml",
             "map": [
                 {
                     "source": "/home/romark/.gradle/caches/8.13/transforms/652d18de6898e55a59cf2eaeacc761e8/transformed/ui-release/res/values-th/values-th.xml",

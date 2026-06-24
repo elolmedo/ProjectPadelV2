@@ -1,7 +1,7 @@
 {
     "logs": [
         {
-            "outputFile": "es.romsolutions.padeltournament.app-mergeDebugResources-70:/values-v21/values-v21.xml",
+            "outputFile": "es.romsolutions.padeltournament.app-mergeDebugResources-72:/values-v21/values-v21.xml",
             "map": [
                 {
                     "source": "/home/romark/.gradle/caches/8.13/transforms/126092041612ef144348650c000bfeda/transformed/credentials-play-services-auth-1.3.0-beta01/res/values-v21/values-v21.xml",

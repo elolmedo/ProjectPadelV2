@@ -2,8 +2,9 @@ package es.romsolutions.padeltournament.ui.screens
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.EmojiEvents
@@ -35,6 +36,12 @@ fun LeaguesListScreen(
     val leagues by leagueViewModel.allLeagues.collectAsState()
     val sdf = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
     var selectedLeagueForStart by remember { mutableStateOf<League?>(null) }
+    
+    var showTeamSetupDialog by remember { mutableStateOf<League?>(null) }
+    var selectedDays by remember { mutableStateOf<List<Int>>(emptyList()) }
+    var numCourts by remember { mutableIntStateOf(1) }
+    var startH by remember { mutableIntStateOf(0) }
+    var startM by remember { mutableIntStateOf(0) }
 
     if (leagues.isEmpty()) {
         EmptyState(
@@ -62,9 +69,11 @@ fun LeaguesListScreen(
             )
         }
 
-        LazyColumn(
+        LazyVerticalGrid(
+            columns = GridCells.Adaptive(minSize = 300.dp),
             modifier = Modifier.fillMaxSize(),
-            verticalArrangement = Arrangement.spacedBy(8.dp)
+            verticalArrangement = Arrangement.spacedBy(8.dp),
+            horizontalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             items(leagues) { l ->
                 Card(
@@ -107,31 +116,32 @@ fun LeaguesListScreen(
     }
 
     if (selectedLeagueForStart != null) {
-        var setupStep by remember { mutableIntStateOf(1) }
-        var selectedDays by remember { mutableStateOf<List<Int>>(emptyList()) }
-        var leagueCourts by remember { mutableIntStateOf(1) }
-        var leagueStartHour by remember { mutableIntStateOf(18) }
-        var leagueStartMinute by remember { mutableIntStateOf(0) }
-
-        if (setupStep == 1) {
-            StartLeagueDialog(league = selectedLeagueForStart!!, onDismiss = { selectedLeagueForStart = null }, onConfirm = { days, c, h, m -> 
+        StartLeagueDialog(
+            league = selectedLeagueForStart!!,
+            onDismiss = { selectedLeagueForStart = null },
+            onConfirm = { days, nCourts, sh, sm ->
+                showTeamSetupDialog = selectedLeagueForStart
                 selectedDays = days
-                leagueCourts = c
-                leagueStartHour = h
-                leagueStartMinute = m
-                setupStep = 2 
-            })
-        } else {
-            TeamSetupDialog(
-                league = selectedLeagueForStart!!, playerViewModel = playerViewModel, leagueViewModel = leagueViewModel,
-                onDismiss = { selectedLeagueForStart = null },
-                onConfirm = { teams ->
-                    leagueViewModel.startLeagueWithTeams(selectedLeagueForStart!!, selectedDays, teams, leagueCourts, leagueStartHour, leagueStartMinute)
-                    val id = selectedLeagueForStart!!.id
-                    selectedLeagueForStart = null
-                    onLeagueStarted(id)
-                }
-            )
-        }
+                numCourts = nCourts
+                startH = sh
+                startM = sm
+                selectedLeagueForStart = null
+            }
+        )
+    }
+
+    if (showTeamSetupDialog != null) {
+        TeamSetupDialog(
+            league = showTeamSetupDialog!!,
+            playerViewModel = playerViewModel,
+            leagueViewModel = leagueViewModel,
+            onDismiss = { showTeamSetupDialog = null },
+            onConfirm = { teams ->
+                leagueViewModel.startLeagueWithTeams(showTeamSetupDialog!!, selectedDays, teams, numCourts, startH, startM)
+                val id = showTeamSetupDialog!!.id
+                showTeamSetupDialog = null
+                onLeagueStarted(id)
+            }
+        )
     }
 }

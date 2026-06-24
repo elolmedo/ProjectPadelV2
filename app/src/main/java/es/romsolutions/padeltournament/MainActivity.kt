@@ -14,7 +14,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.ui.Alignment
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.material3.TabRowDefaults.tabIndicatorOffset
 import androidx.compose.runtime.*
@@ -28,7 +28,9 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import coil.compose.AsyncImage
-import androidx.compose.material.icons.filled.Person
+import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
+import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
+import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
 import es.romsolutions.padeltournament.data.database.AppDatabase
 import es.romsolutions.padeltournament.data.model.League
 import es.romsolutions.padeltournament.data.model.Tournament
@@ -56,6 +58,7 @@ class MainActivity : ComponentActivity() {
     private lateinit var authManager: AuthManager
     private lateinit var billingManager: BillingManager
 
+    @OptIn(ExperimentalMaterial3WindowSizeClassApi::class, ExperimentalMaterial3Api::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         installSplashScreen()
         super.onCreate(savedInstanceState)
@@ -64,6 +67,8 @@ class MainActivity : ComponentActivity() {
         billingManager = BillingManager(this)
 
         setContent {
+            val windowSizeClass = calculateWindowSizeClass(this)
+            
             // Estado para observar si el usuario está logueado
             var isLoggedIn by remember { mutableStateOf(authManager.isUserLoggedIn()) }
             val isProUser by billingManager.isPro.collectAsState()
@@ -99,6 +104,7 @@ class MainActivity : ComponentActivity() {
                                 playerViewModel, leagueViewModel, tournamentViewModel,
                                 authManager = authManager,
                                 isPro = isProUser,
+                                windowWidthSizeClass = windowSizeClass.widthSizeClass,
                                 onTogglePro = { /* Ya no existe el truco */ },
                                 onNavigateToMatches = { leagueId ->
                                     selectedLeagueId = leagueId
@@ -139,6 +145,7 @@ class MainActivity : ComponentActivity() {
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainScreen(
     playerViewModel: PlayerViewModel, 
@@ -146,18 +153,23 @@ fun MainScreen(
     tournamentViewModel: TournamentViewModel,
     authManager: AuthManager,
     isPro: Boolean,
+    windowWidthSizeClass: WindowWidthSizeClass,
     onTogglePro: () -> Unit,
     onNavigateToMatches: (Int?) -> Unit,
     onNavigateToTournamentMatches: (Int?) -> Unit,
     onNavigateToProfile: () -> Unit
 ) {
     var selectedTabIndex by remember { mutableIntStateOf(0) }
+    val isExpanded = windowWidthSizeClass == WindowWidthSizeClass.Expanded
+
     val tabs = listOf(
-        stringResource(R.string.tab_tournaments),
-        stringResource(R.string.tab_leagues),
-        stringResource(R.string.tab_players),
-        stringResource(R.string.tab_ranking)
+        Pair(stringResource(R.string.tab_tournaments), Icons.Default.MilitaryTech),
+        Pair(stringResource(R.string.tab_leagues), Icons.Default.EmojiEvents),
+        Pair(stringResource(R.string.tab_players), Icons.Default.Person),
+        Pair(stringResource(R.string.tab_ranking), Icons.Default.FormatListNumbered)
     )
+    
+    val currentTabTitle = tabs[selectedTabIndex].first
     
     var showAddPlayerDialog by remember { mutableStateOf(false) }
     var showAddLeagueDialog by remember { mutableStateOf(false) }
@@ -180,177 +192,161 @@ fun MainScreen(
         )
     }
 
-    Scaffold(
-        floatingActionButton = {
-            Box(modifier = Modifier.fillMaxSize()) {
-                // Icono de perfil abajo a la izquierda
-                FloatingActionButton(
-                    onClick = onNavigateToProfile,
-                    modifier = Modifier
-                        .align(Alignment.BottomStart)
-                        .padding(start = 32.dp, bottom = 16.dp),
-                    containerColor = MaterialTheme.colorScheme.secondaryContainer,
-                    contentColor = MaterialTheme.colorScheme.onSecondaryContainer
-                ) {
+    Row(modifier = Modifier.fillMaxSize()) {
+        if (isExpanded) {
+            NavigationRail(
+                containerColor = MaterialTheme.colorScheme.surfaceVariant,
+                header = {
                     val photoUrl = authManager.getCurrentUserPhotoUrl()
-                    if (photoUrl != null) {
-                        AsyncImage(
-                            model = photoUrl,
-                            contentDescription = "Perfil",
-                            modifier = Modifier
-                                .size(24.dp)
-                                .clip(CircleShape),
-                            contentScale = ContentScale.Crop
-                        )
-                    } else {
-                        Icon(Icons.Default.Person, contentDescription = "Perfil")
+                    IconButton(onClick = onNavigateToProfile) {
+                        if (photoUrl != null) {
+                            AsyncImage(
+                                model = photoUrl,
+                                contentDescription = "Perfil",
+                                modifier = Modifier.size(32.dp).clip(CircleShape),
+                                contentScale = ContentScale.Crop
+                            )
+                        } else {
+                            Icon(Icons.Default.Person, contentDescription = "Perfil")
+                        }
                     }
                 }
-
-                // Botón añadir original a la derecha
+            ) {
+                tabs.forEachIndexed { index, tab ->
+                    NavigationRailItem(
+                        selected = selectedTabIndex == index,
+                        onClick = { selectedTabIndex = index },
+                        icon = { Icon(tab.second, contentDescription = tab.first) },
+                        label = { Text(tab.first) }
+                    )
+                }
+                
+                Spacer(Modifier.weight(1f))
+                
                 if (selectedTabIndex <= 2) {
                     FloatingActionButton(
                         onClick = {
                             when (selectedTabIndex) {
-                                0 -> {
-                                    if (!isPro && (leagues.size + tournaments.size >= 2)) showProDialog = true
-                                    else showAddTournamentDialog = true
-                                }
-                                1 -> {
-                                    if (!isPro && (leagues.size + tournaments.size >= 2)) showProDialog = true
-                                    else showAddLeagueDialog = true
-                                }
-                                2 -> {
-                                    if (!isPro && players.size >= 10) showProDialog = true
-                                    else showAddPlayerDialog = true
-                                }
+                                0 -> if (!isPro && (leagues.size + tournaments.size >= 2)) showProDialog else showAddTournamentDialog = true
+                                1 -> if (!isPro && (leagues.size + tournaments.size >= 2)) showProDialog else showAddLeagueDialog = true
+                                2 -> if (!isPro && players.size >= 10) showProDialog else showAddPlayerDialog = true
                             }
                         },
-                        modifier = Modifier
-                            .align(Alignment.BottomEnd)
-                            .padding(end = 16.dp, bottom = 16.dp),
-                        containerColor = MaterialTheme.colorScheme.primary,
-                        contentColor = MaterialTheme.colorScheme.onPrimary
-                    ) { Icon(Icons.Default.Add, contentDescription = stringResource(R.string.add)) }
+                        containerColor = MaterialTheme.colorScheme.primary
+                    ) { Icon(Icons.Default.Add, null) }
+                    Spacer(Modifier.height(16.dp))
                 }
             }
         }
-    ) { paddingValues ->
-        Column(modifier = Modifier.fillMaxSize().padding(paddingValues)) {
-            Row(
-                modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 20.dp),
-                horizontalArrangement = Arrangement.Center,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Text(
-                    text = stringResource(R.string.app_name),
-                    style = MaterialTheme.typography.headlineLarge.copy(fontWeight = FontWeight.ExtraBold, fontSize = 28.sp),
-                    color = MaterialTheme.colorScheme.primary,
-                    modifier = Modifier.clickable { onTogglePro() }
-                )
-                if (isPro) {
-                    Spacer(Modifier.width(8.dp))
-                    Surface(
-                        color = MaterialTheme.colorScheme.tertiary,
-                        shape = MaterialTheme.shapes.small
-                    ) {
-                        Text(
-                            "PRO", 
-                            modifier = Modifier.padding(horizontal = 4.dp, vertical = 2.dp),
-                            style = MaterialTheme.typography.labelSmall,
-                            color = MaterialTheme.colorScheme.onTertiary,
-                            fontWeight = FontWeight.Bold
+
+        Scaffold(
+            topBar = {
+                if (!isExpanded) {
+                    CenterAlignedTopAppBar(
+                        title = {
+                            Row(verticalAlignment = Alignment.CenterVertically) {
+                                Text(
+                                    text = stringResource(R.string.app_name),
+                                    style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.ExtraBold),
+                                    color = MaterialTheme.colorScheme.primary,
+                                    modifier = Modifier.clickable { onTogglePro() }
+                                )
+                                if (isPro) {
+                                    Spacer(Modifier.width(8.dp))
+                                    Surface(color = MaterialTheme.colorScheme.tertiary, shape = MaterialTheme.shapes.small) {
+                                        Text("PRO", modifier = Modifier.padding(horizontal = 4.dp, vertical = 2.dp), style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onTertiary, fontWeight = FontWeight.Bold)
+                                    }
+                                }
+                            }
+                        },
+                        actions = {
+                            val photoUrl = authManager.getCurrentUserPhotoUrl()
+                            IconButton(onClick = onNavigateToProfile) {
+                                if (photoUrl != null) {
+                                    AsyncImage(
+                                        model = photoUrl,
+                                        contentDescription = "Perfil",
+                                        modifier = Modifier.size(32.dp).clip(CircleShape),
+                                        contentScale = ContentScale.Crop
+                                    )
+                                } else {
+                                    Icon(Icons.Default.Person, contentDescription = "Perfil")
+                                }
+                            }
+                        },
+                        colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
+                            containerColor = MaterialTheme.colorScheme.background
                         )
+                    )
+                }
+            },
+            bottomBar = {
+                if (!isExpanded) {
+                    NavigationBar(
+                        containerColor = MaterialTheme.colorScheme.surfaceVariant,
+                        tonalElevation = 8.dp
+                    ) {
+                        tabs.forEachIndexed { index, tab ->
+                            NavigationBarItem(
+                                selected = selectedTabIndex == index,
+                                onClick = { selectedTabIndex = index },
+                                icon = { Icon(tab.second, contentDescription = tab.first) },
+                                label = { Text(tab.first, style = MaterialTheme.typography.labelSmall) }
+                            )
+                        }
+                    }
+                }
+            },
+            floatingActionButton = {
+                if (!isExpanded) {
+                    if (selectedTabIndex <= 2) {
+                        FloatingActionButton(
+                            onClick = {
+                                when (selectedTabIndex) {
+                                    0 -> if (!isPro && (leagues.size + tournaments.size >= 2)) showProDialog = true else showAddTournamentDialog = true
+                                    1 -> if (!isPro && (leagues.size + tournaments.size >= 2)) showProDialog = true else showAddLeagueDialog = true
+                                    2 -> if (!isPro && players.size >= 10) showProDialog = true else showAddPlayerDialog = true
+                                }
+                            },
+                            containerColor = MaterialTheme.colorScheme.primary
+                        ) { Icon(Icons.Default.Add, contentDescription = stringResource(R.string.add)) }
                     }
                 }
             }
-
-            TabRow(
-                selectedTabIndex = selectedTabIndex,
-                containerColor = MaterialTheme.colorScheme.background,
-                contentColor = MaterialTheme.colorScheme.primary,
-                indicator = { tabPositions ->
-                    TabRowDefaults.Indicator(
-                        Modifier.tabIndicatorOffset(tabPositions[selectedTabIndex]),
-                        height = 3.dp,
+        ) { paddingValues ->
+            Column(modifier = Modifier.fillMaxSize().padding(paddingValues)) {
+                if (isExpanded) {
+                    Text(
+                        text = tabs[selectedTabIndex].first,
+                        style = MaterialTheme.typography.headlineMedium.copy(fontWeight = FontWeight.Bold),
+                        modifier = Modifier.padding(16.dp),
                         color = MaterialTheme.colorScheme.primary
                     )
-                },
-                divider = {}
-            ) {
-                tabs.forEachIndexed { index, title ->
-                    Tab(
-                        selected = selectedTabIndex == index,
-                        onClick = { selectedTabIndex = index },
-                        text = { 
-                            Text(
-                                text = title, 
-                                style = MaterialTheme.typography.titleSmall,
-                                fontWeight = if (selectedTabIndex == index) FontWeight.Bold else FontWeight.Normal
-                            ) 
-                        }
-                    )
                 }
-            }
 
-            Column(modifier = Modifier.fillMaxSize().padding(16.dp)) {
-                when (selectedTabIndex) {
-                    0 -> TournamentsListScreen(tournamentViewModel, playerViewModel, onTournamentStarted = onNavigateToTournamentMatches)
-                    1 -> LeaguesListScreen(leagueViewModel, playerViewModel, onLeagueStarted = onNavigateToMatches)
-                    2 -> PlayersListScreen(
-                        viewModel = playerViewModel,
-                        onNavigateToCreateLeague = { ids -> 
-                            if (!isPro && (leagues.size + tournaments.size >= 2)) showProDialog = true
-                            else {
-                                preselectedPlayerIds = ids
-                                showAddLeagueDialog = true 
-                            }
-                        },
-                        onNavigateToCreateTournament = { ids -> 
-                            if (!isPro && (leagues.size + tournaments.size >= 2)) showProDialog = true
-                            else {
-                                preselectedPlayerIds = ids
-                                showAddTournamentDialog = true 
-                            }
-                        }
-                    )
-                    3 -> RankingListScreen(leagueViewModel, tournamentViewModel, playerViewModel)
+                Column(modifier = Modifier.fillMaxSize().padding(16.dp)) {
+                    when (selectedTabIndex) {
+                        0 -> TournamentsListScreen(tournamentViewModel, playerViewModel, onTournamentStarted = onNavigateToTournamentMatches)
+                        1 -> LeaguesListScreen(leagueViewModel, playerViewModel, onLeagueStarted = onNavigateToMatches)
+                        2 -> PlayersListScreen(
+                            viewModel = playerViewModel,
+                            onNavigateToCreateLeague = { ids -> if (!isPro && (leagues.size + tournaments.size >= 2)) showProDialog = true else { preselectedPlayerIds = ids; showAddLeagueDialog = true } },
+                            onNavigateToCreateTournament = { ids -> if (!isPro && (leagues.size + tournaments.size >= 2)) showProDialog = true else { preselectedPlayerIds = ids; showAddTournamentDialog = true } }
+                        )
+                        3 -> RankingListScreen(leagueViewModel, tournamentViewModel, playerViewModel)
+                    }
                 }
             }
         }
     }
 
     if (showAddPlayerDialog) {
-        AddPlayerDialog(
-            authManager = authManager,
-            onDismiss = { showAddPlayerDialog = false }, 
-            onSave = { playerViewModel.insert(it); showAddPlayerDialog = false }
-        )
+        AddPlayerDialog(authManager = authManager, onDismiss = { showAddPlayerDialog = false }, onSave = { playerViewModel.insert(it); showAddPlayerDialog = false })
     }
     if (showAddLeagueDialog) {
-        AddLeagueDialog(
-            playerViewModel = playerViewModel,
-            authManager = authManager,
-            initialPlayerIds = preselectedPlayerIds,
-            onDismiss = { showAddLeagueDialog = false; preselectedPlayerIds = emptyList() },
-            onSave = { league, ids -> 
-                leagueViewModel.insertLeagueWithPlayers(league, ids)
-                showAddLeagueDialog = false
-                preselectedPlayerIds = emptyList()
-            }
-        )
+        AddLeagueDialog(playerViewModel = playerViewModel, authManager = authManager, initialPlayerIds = preselectedPlayerIds, onDismiss = { showAddLeagueDialog = false; preselectedPlayerIds = emptyList() }, onSave = { league, ids -> leagueViewModel.insertLeagueWithPlayers(league, ids); showAddLeagueDialog = false; preselectedPlayerIds = emptyList() })
     }
     if (showAddTournamentDialog) {
-        AddTournamentDialog(
-            playerViewModel = playerViewModel,
-            authManager = authManager,
-            initialPlayerIds = preselectedPlayerIds,
-            onDismiss = { showAddTournamentDialog = false; preselectedPlayerIds = emptyList() },
-            onSave = { tournament, ids ->
-                tournamentViewModel.insertTournamentWithPlayers(tournament, ids)
-                showAddTournamentDialog = false
-                preselectedPlayerIds = emptyList()
-            }
-        )
+        AddTournamentDialog(playerViewModel = playerViewModel, authManager = authManager, initialPlayerIds = preselectedPlayerIds, onDismiss = { showAddTournamentDialog = false; preselectedPlayerIds = emptyList() }, onSave = { tournament, ids -> tournamentViewModel.insertTournamentWithPlayers(tournament, ids); showAddTournamentDialog = false; preselectedPlayerIds = emptyList() })
     }
 }

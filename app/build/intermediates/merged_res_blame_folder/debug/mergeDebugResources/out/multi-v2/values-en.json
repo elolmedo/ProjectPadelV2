@@ -1,7 +1,7 @@
 {
     "logs": [
         {
-            "outputFile": "es.romsolutions.padeltournament.app-mergeDebugResources-70:/values-en/values-en.xml",
+            "outputFile": "es.romsolutions.padeltournament.app-mergeDebugResources-72:/values-en/values-en.xml",
             "map": [
                 {
                     "source": "/home/romark/WorkSpace/projectPadel/app/src/main/res/values-en/strings.xml",

@@ -2,8 +2,9 @@ package es.romsolutions.padeltournament.ui.screens
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.*
@@ -68,7 +69,12 @@ fun PlayersListScreen(
                 description = ""
             )
         } else {
-            LazyColumn(modifier = Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+            LazyVerticalGrid(
+                columns = GridCells.Adaptive(minSize = 300.dp),
+                modifier = Modifier.weight(1f), 
+                verticalArrangement = Arrangement.spacedBy(8.dp),
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
                 items(players) { p ->
                     val isSelected = selectedPlayerIds.contains(p.id)
                     Card(
@@ -94,7 +100,6 @@ fun PlayersListScreen(
                                 }
                             }
                             
-                            // Imagen de contacto o icono genérico
                             if (p.photoUri != null) {
                                 AsyncImage(
                                     model = p.photoUri,
@@ -126,50 +131,6 @@ fun PlayersListScreen(
             colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.tertiary)
         ) {
             Text("Cargar Demo")
-        }
-    }
-
-    if (editingPlayer != null) {
-        EditPlayerDialog(
-            player = editingPlayer!!,
-            onDismiss = { editingPlayer = null },
-            onSave = { updated -> 
-                viewModel.insert(updated)
-                editingPlayer = null
-                selectedPlayerIds = emptySet()
-            }
-        )
-    }
-}
-
-@Composable
-fun EditPlayerDialog(player: Player, onDismiss: () -> Unit, onSave: (Player) -> Unit) {
-    var n by remember { mutableStateOf(player.nombre) }
-    var p by remember { mutableStateOf(player.phone) }
-    var e by remember { mutableStateOf(player.email) }
-    var l by remember { mutableStateOf(player.level) }
-
-    androidx.compose.ui.window.Dialog(onDismissRequest = onDismiss) {
-        Card(modifier = Modifier.fillMaxWidth().padding(16.dp)) {
-            Column(modifier = Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                Text("Editar Jugador", style = MaterialTheme.typography.headlineSmall, color = MaterialTheme.colorScheme.primary)
-                OutlinedTextField(value = n, onValueChange = { n = it }, label = { Text("Nombre") })
-                OutlinedTextField(value = p, onValueChange = { p = it }, label = { Text("Teléfono") })
-                OutlinedTextField(value = e, onValueChange = { e = it }, label = { Text("Email") })
-                
-                Text(text = "Nivel: ${String.format("%.1f", l)}", style = MaterialTheme.typography.titleSmall)
-                Slider(
-                    value = l.toFloat(),
-                    onValueChange = { l = it.toDouble() },
-                    valueRange = 1.0f..7.0f,
-                    steps = 11
-                )
-
-                Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.End) {
-                    TextButton(onClick = onDismiss) { Text("Cancelar") }
-                    Button(onClick = { onSave(player.copy(nombre = n, phone = p, email = e, level = l)) }) { Text("Guardar") }
-                }
-            }
         }
     }
 }

@@ -2,8 +2,9 @@ package es.romsolutions.padeltournament.ui.screens
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -46,7 +47,6 @@ fun MatchesScreen(
     val currentTournament = filterTournamentId?.let { tid -> tournaments.find { it.id == tid } }
     val isPozo = currentTournament?.type == "POZO"
 
-    // Auto-seleccionar la última ronda para Pozo si no hay una seleccionada
     LaunchedEffect(matches, filterTournamentId) {
         if (isPozo && filterTournamentId != null) {
             val maxRound = matches.filter { it.tournamentId == filterTournamentId }.maxOfOrNull { it.roundNumber }
@@ -100,11 +100,14 @@ fun MatchesScreen(
                                 textStyle = MaterialTheme.typography.bodySmall,
                                 trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expandedFilter) }
                             )
-                            ExposedDropdownMenu(expanded = expandedFilter, onDismissRequest = { expandedFilter = false }) {
-                                DropdownMenuItem(text = { Text(stringResource(R.string.filter_all)) }, onClick = { filterLeagueId = null; filterTournamentId = null; expandedFilter = false })
-                                leagues.filter { it.isStarted }.forEach { l -> DropdownMenuItem(text = { Text("${stringResource(R.string.tab_leagues)}: ${l.name}") }, onClick = { filterLeagueId = l.id; filterTournamentId = null; expandedFilter = false }) }
-                                tournaments.filter { it.isStarted }.forEach { t -> DropdownMenuItem(text = { Text("${stringResource(R.string.tab_tournaments)}: ${t.name}") }, onClick = { filterTournamentId = t.id; filterLeagueId = null; expandedFilter = false }) }
-                            }
+            ExposedDropdownMenu(expanded = expandedFilter, onDismissRequest = { expandedFilter = false }) {
+                DropdownMenuItem(text = { Text(stringResource(R.string.filter_all)) }, onClick = { filterLeagueId = null; filterTournamentId = null; expandedFilter = false })
+                leagues.filter { it.isStarted }.forEach { l -> DropdownMenuItem(text = { Text("${stringResource(R.string.tab_leagues)}: ${l.name}") }, onClick = { filterLeagueId = l.id; filterTournamentId = null; expandedFilter = false }) }
+                tournaments.filter { it.isStarted }.forEach { t -> 
+                    val typePrefix = if (t.type == "POZO") "Rey de la Pista" else stringResource(R.string.tab_tournaments)
+                    DropdownMenuItem(text = { Text("$typePrefix: ${t.name}") }, onClick = { filterTournamentId = t.id; filterLeagueId = null; expandedFilter = false }) 
+                }
+            }
                         }
 
                         if (filterLeagueId != null || (isPozo && filterTournamentId != null)) {
@@ -120,7 +123,6 @@ fun MatchesScreen(
                                 ExposedDropdownMenu(expanded = expR, onDismissRequest = { expR = false }) {
                                     DropdownMenuItem(text = { Text(stringResource(R.string.filter_all)) }, onClick = { selectedRound = null; expR = false })
                                     
-                                    // Filtrar rondas ÚNICAMENTE del torneo/liga seleccionado
                                     val availableRounds = matches
                                         .filter { (filterLeagueId != null && it.leagueId == filterLeagueId) || (filterTournamentId != null && it.tournamentId == filterTournamentId) }
                                         .map { it.roundNumber }
@@ -218,7 +220,12 @@ fun MatchesScreen(
             }
         }
     ) { pv ->
-        LazyColumn(modifier = Modifier.fillMaxSize().padding(pv).padding(16.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+        LazyVerticalGrid(
+            columns = GridCells.Adaptive(minSize = 350.dp),
+            modifier = Modifier.fillMaxSize().padding(pv).padding(16.dp), 
+            verticalArrangement = Arrangement.spacedBy(8.dp),
+            horizontalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
             if (filteredMatches.isEmpty()) { 
                 item { Text(text = stringResource(R.string.empty_matches), modifier = Modifier.fillMaxWidth().padding(32.dp), textAlign = TextAlign.Center) }
             }

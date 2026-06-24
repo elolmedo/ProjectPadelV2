@@ -1,7 +1,7 @@
 {
     "logs": [
         {
-            "outputFile": "es.romsolutions.padeltournament.app-mergeDebugResources-70:/values-zh-rTW/values-zh-rTW.xml",
+            "outputFile": "es.romsolutions.padeltournament.app-mergeDebugResources-72:/values-zh-rTW/values-zh-rTW.xml",
             "map": [
                 {
                     "source": "/home/romark/.gradle/caches/8.13/transforms/8b55938b731c6f6c52c96f827a96d99e/transformed/material3-1.1.2/res/values-zh-rTW/values-zh-rTW.xml",

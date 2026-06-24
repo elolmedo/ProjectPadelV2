@@ -1,7 +1,7 @@
 {
     "logs": [
         {
-            "outputFile": "es.romsolutions.padeltournament.app-mergeDebugResources-70:/values-night-v8/values-night-v8.xml",
+            "outputFile": "es.romsolutions.padeltournament.app-mergeDebugResources-72:/values-night-v8/values-night-v8.xml",
             "map": [
                 {
                     "source": "/home/romark/.gradle/caches/8.13/transforms/ddc8459134ac6bc5ba948a60e417bf03/transformed/core-splashscreen-1.0.1/res/values-night-v8/values-night-v8.xml",

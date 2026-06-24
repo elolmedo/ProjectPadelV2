@@ -201,21 +201,30 @@ class LeagueViewModel(private val repository: LeagueRepository) : ViewModel() {
         if (matchesToFinish.isEmpty()) return@launch
 
         matchesToFinish.forEach { match ->
-            val winner = (1..2).random()
-            val isTwoZero = (0..1).random() == 0
-            
-            val updatedMatch = if (winner == 1) {
+            val updatedMatch = if (match.courtNumber == 0) {
+                // En el caso de RESERVA (Pista 0), siempre gana el equipo/jugador en espera (Team 1)
                 match.copy(
                     scoreTeamOne = 2,
-                    scoreTeamTwo = if (isTwoZero) 0 else 1,
+                    scoreTeamTwo = 0,
                     playFinish = System.currentTimeMillis()
                 )
             } else {
-                match.copy(
-                    scoreTeamOne = if (isTwoZero) 0 else 1,
-                    scoreTeamTwo = 2,
-                    playFinish = System.currentTimeMillis()
-                )
+                val winner = (1..2).random()
+                val isTwoZero = (0..1).random() == 0
+                
+                if (winner == 1) {
+                    match.copy(
+                        scoreTeamOne = 2,
+                        scoreTeamTwo = if (isTwoZero) 0 else 1,
+                        playFinish = System.currentTimeMillis()
+                    )
+                } else {
+                    match.copy(
+                        scoreTeamOne = if (isTwoZero) 0 else 1,
+                        scoreTeamTwo = 2,
+                        playFinish = System.currentTimeMillis()
+                    )
+                }
             }
             repository.updateMatch(updatedMatch)
         }

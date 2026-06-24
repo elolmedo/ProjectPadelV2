@@ -6,10 +6,16 @@ animator fragment_fade_enter
 animator fragment_fade_exit
 animator fragment_open_enter
 animator fragment_open_exit
+attr activityAction
+attr activityName
 attr alpha
+attr alwaysExpand
 attr buttonSize
 attr circleCrop
+attr clearTop
 attr colorScheme
+attr finishPrimaryWithSecondary
+attr finishSecondaryWithPrimary
 attr font
 attr fontProviderAuthority
 attr fontProviderCerts
@@ -25,11 +31,19 @@ attr imageAspectRatio
 attr imageAspectRatioAdjust
 attr lStar
 attr nestedScrollViewStyle
+attr placeholderActivityName
 attr postSplashScreenTheme
+attr primaryActivityName
 attr queryPatterns
 attr scopeUris
+attr secondaryActivityAction
+attr secondaryActivityName
 attr shortcutMatchRequired
 attr splashScreenIconSize
+attr splitLayoutDirection
+attr splitMinSmallestWidth
+attr splitMinWidth
+attr splitRatio
 attr ttcIndex
 attr windowSplashScreenAnimatedIcon
 attr windowSplashScreenAnimationDuration
@@ -190,6 +204,7 @@ id actions
 id adjust_height
 id adjust_width
 id androidx_compose_ui_view_composition_context
+id androidx_window_activity_scope
 id async
 id auto
 id blocking
@@ -219,6 +234,8 @@ id italic
 id light
 id line1
 id line3
+id locale
+id ltr
 id none
 id normal
 id notification_background
@@ -228,6 +245,7 @@ id pooling_container_listener_holder_tag
 id report_drawn
 id right_icon
 id right_side
+id rtl
 id special_effects_controller_view_tag
 id splashscreen_icon_view
 id standard
@@ -464,6 +482,8 @@ style Theme_SplashScreen_Common
 style Theme_SplashScreen_IconBackground
 style Widget_Compat_NotificationActionContainer
 style Widget_Compat_NotificationActionText
+styleable ActivityFilter activityAction activityName
+styleable ActivityRule alwaysExpand
 styleable AnimatedStateListDrawableCompat android_dither android_visible android_variablePadding android_constantSize android_enterFadeDuration android_exitFadeDuration
 styleable AnimatedStateListDrawableItem android_id android_drawable
 styleable AnimatedStateListDrawableTransition android_drawable android_toId android_fromId android_reversible
@@ -477,6 +497,9 @@ styleable GradientColor android_startColor android_endColor android_type android
 styleable GradientColorItem android_color android_offset
 styleable LoadingImageView circleCrop imageAspectRatio imageAspectRatioAdjust
 styleable SignInButton buttonSize colorScheme scopeUris
+styleable SplitPairFilter primaryActivityName secondaryActivityAction secondaryActivityName
+styleable SplitPairRule clearTop finishPrimaryWithSecondary finishSecondaryWithPrimary splitLayoutDirection splitMinSmallestWidth splitMinWidth splitRatio
+styleable SplitPlaceholderRule placeholderActivityName splitLayoutDirection splitMinSmallestWidth splitMinWidth splitRatio
 styleable StateListDrawable android_dither android_visible android_variablePadding android_constantSize android_enterFadeDuration android_exitFadeDuration
 styleable StateListDrawableItem android_drawable
 xml com_android_billingclient_phenotype

@@ -1,7 +1,7 @@
 {
     "logs": [
         {
-            "outputFile": "es.romsolutions.padeltournament.app-mergeDebugResources-70:/values-watch-v20/values-watch-v20.xml",
+            "outputFile": "es.romsolutions.padeltournament.app-mergeDebugResources-72:/values-watch-v20/values-watch-v20.xml",
             "map": [
                 {
                     "source": "/home/romark/.gradle/caches/8.13/transforms/0ed3125d913047db47298da4fcca40ee/transformed/play-services-auth-21.1.1/res/values-watch-v20/values.xml",

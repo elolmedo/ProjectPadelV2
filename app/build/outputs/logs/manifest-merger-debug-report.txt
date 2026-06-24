@@ -11,8 +11,10 @@ MERGED from [com.google.android.libraries.identity.googleid:googleid:1.1.1] /hom
 MERGED from [com.google.firebase:firebase-crashlytics:19.0.2] /home/romark/.gradle/caches/8.13/transforms/b8a2e2c03977d3351f095c10d257ff8e/transformed/firebase-crashlytics-19.0.2/AndroidManifest.xml:2:1-24:12
 MERGED from [androidx.room:room-ktx:2.6.1] /home/romark/.gradle/caches/8.13/transforms/d5288c50b18826b05acc42a2e45ca367/transformed/room-ktx-2.6.1/AndroidManifest.xml:17:1-22:12
 MERGED from [androidx.room:room-runtime:2.6.1] /home/romark/.gradle/caches/8.13/transforms/a56ddd8229a9a20e2a774a08cb869ce4/transformed/room-runtime-2.6.1/AndroidManifest.xml:17:1-31:12
-MERGED from [androidx.browser:browser:1.4.0] /home/romark/.gradle/caches/8.13/transforms/b867a9d500958f5f586f7ce34a91d59d/transformed/browser-1.4.0/AndroidManifest.xml:17:1-24:12
 MERGED from [androidx.compose.material3:material3:1.1.2] /home/romark/.gradle/caches/8.13/transforms/8b55938b731c6f6c52c96f827a96d99e/transformed/material3-1.1.2/AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.compose.material3:material3-window-size-class:1.1.2] /home/romark/.gradle/caches/8.13/transforms/1db76d1f8c639161904fc3dd5435b6b0/transformed/material3-window-size-class-1.1.2/AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.window:window:1.0.0] /home/romark/.gradle/caches/8.13/transforms/d354ea5c092fe138b1e0ed60d6db28e6/transformed/window-1.0.0/AndroidManifest.xml:17:1-33:12
+MERGED from [androidx.browser:browser:1.4.0] /home/romark/.gradle/caches/8.13/transforms/b867a9d500958f5f586f7ce34a91d59d/transformed/browser-1.4.0/AndroidManifest.xml:17:1-24:12
 MERGED from [io.coil-kt:coil-compose:2.7.0] /home/romark/.gradle/caches/8.13/transforms/a21560782524503666cd6704f3b71c32/transformed/coil-compose-2.7.0/AndroidManifest.xml:2:1-7:12
 MERGED from [io.coil-kt:coil-compose-base:2.7.0] /home/romark/.gradle/caches/8.13/transforms/6a46b81671f9d603000d4fb0fe197e7d/transformed/coil-compose-base-2.7.0/AndroidManifest.xml:2:1-7:12
 MERGED from [com.google.accompanist:accompanist-drawablepainter:0.32.0] /home/romark/.gradle/caches/8.13/transforms/d5b7ae55dd6920471d9c8f3423d44c6b/transformed/accompanist-drawablepainter-0.32.0/AndroidManifest.xml:17:1-23:12
@@ -143,6 +145,8 @@ MERGED from [com.google.firebase:firebase-crashlytics:19.0.2] /home/romark/.grad
 MERGED from [com.google.firebase:firebase-crashlytics:19.0.2] /home/romark/.gradle/caches/8.13/transforms/b8a2e2c03977d3351f095c10d257ff8e/transformed/firebase-crashlytics-19.0.2/AndroidManifest.xml:11:5-22:19
 MERGED from [androidx.room:room-runtime:2.6.1] /home/romark/.gradle/caches/8.13/transforms/a56ddd8229a9a20e2a774a08cb869ce4/transformed/room-runtime-2.6.1/AndroidManifest.xml:23:5-29:19
 MERGED from [androidx.room:room-runtime:2.6.1] /home/romark/.gradle/caches/8.13/transforms/a56ddd8229a9a20e2a774a08cb869ce4/transformed/room-runtime-2.6.1/AndroidManifest.xml:23:5-29:19
+MERGED from [androidx.window:window:1.0.0] /home/romark/.gradle/caches/8.13/transforms/d354ea5c092fe138b1e0ed60d6db28e6/transformed/window-1.0.0/AndroidManifest.xml:24:5-31:19
+MERGED from [androidx.window:window:1.0.0] /home/romark/.gradle/caches/8.13/transforms/d354ea5c092fe138b1e0ed60d6db28e6/transformed/window-1.0.0/AndroidManifest.xml:24:5-31:19
 MERGED from [androidx.compose.ui:ui-test-manifest:1.6.8] /home/romark/.gradle/caches/8.13/transforms/862e7e0ed91b33dd4132bab184955b67/transformed/ui-test-manifest-1.6.8/AndroidManifest.xml:22:5-26:19
 MERGED from [androidx.compose.ui:ui-test-manifest:1.6.8] /home/romark/.gradle/caches/8.13/transforms/862e7e0ed91b33dd4132bab184955b67/transformed/ui-test-manifest-1.6.8/AndroidManifest.xml:22:5-26:19
 MERGED from [androidx.compose.ui:ui-tooling-android:1.6.8] /home/romark/.gradle/caches/8.13/transforms/b565dcd2c9689f6f890107503a0c5135/transformed/ui-tooling-release/AndroidManifest.xml:22:5-26:19
@@ -267,10 +271,14 @@ MERGED from [androidx.room:room-ktx:2.6.1] /home/romark/.gradle/caches/8.13/tran
 MERGED from [androidx.room:room-ktx:2.6.1] /home/romark/.gradle/caches/8.13/transforms/d5288c50b18826b05acc42a2e45ca367/transformed/room-ktx-2.6.1/AndroidManifest.xml:20:5-44
 MERGED from [androidx.room:room-runtime:2.6.1] /home/romark/.gradle/caches/8.13/transforms/a56ddd8229a9a20e2a774a08cb869ce4/transformed/room-runtime-2.6.1/AndroidManifest.xml:21:5-44
 MERGED from [androidx.room:room-runtime:2.6.1] /home/romark/.gradle/caches/8.13/transforms/a56ddd8229a9a20e2a774a08cb869ce4/transformed/room-runtime-2.6.1/AndroidManifest.xml:21:5-44
-MERGED from [androidx.browser:browser:1.4.0] /home/romark/.gradle/caches/8.13/transforms/b867a9d500958f5f586f7ce34a91d59d/transformed/browser-1.4.0/AndroidManifest.xml:20:5-22:41
-MERGED from [androidx.browser:browser:1.4.0] /home/romark/.gradle/caches/8.13/transforms/b867a9d500958f5f586f7ce34a91d59d/transformed/browser-1.4.0/AndroidManifest.xml:20:5-22:41
 MERGED from [androidx.compose.material3:material3:1.1.2] /home/romark/.gradle/caches/8.13/transforms/8b55938b731c6f6c52c96f827a96d99e/transformed/material3-1.1.2/AndroidManifest.xml:20:5-44
 MERGED from [androidx.compose.material3:material3:1.1.2] /home/romark/.gradle/caches/8.13/transforms/8b55938b731c6f6c52c96f827a96d99e/transformed/material3-1.1.2/AndroidManifest.xml:20:5-44
+MERGED from [androidx.compose.material3:material3-window-size-class:1.1.2] /home/romark/.gradle/caches/8.13/transforms/1db76d1f8c639161904fc3dd5435b6b0/transformed/material3-window-size-class-1.1.2/AndroidManifest.xml:20:5-44
+MERGED from [androidx.compose.material3:material3-window-size-class:1.1.2] /home/romark/.gradle/caches/8.13/transforms/1db76d1f8c639161904fc3dd5435b6b0/transformed/material3-window-size-class-1.1.2/AndroidManifest.xml:20:5-44
+MERGED from [androidx.window:window:1.0.0] /home/romark/.gradle/caches/8.13/transforms/d354ea5c092fe138b1e0ed60d6db28e6/transformed/window-1.0.0/AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.window:window:1.0.0] /home/romark/.gradle/caches/8.13/transforms/d354ea5c092fe138b1e0ed60d6db28e6/transformed/window-1.0.0/AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.browser:browser:1.4.0] /home/romark/.gradle/caches/8.13/transforms/b867a9d500958f5f586f7ce34a91d59d/transformed/browser-1.4.0/AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.browser:browser:1.4.0] /home/romark/.gradle/caches/8.13/transforms/b867a9d500958f5f586f7ce34a91d59d/transformed/browser-1.4.0/AndroidManifest.xml:20:5-22:41
 MERGED from [io.coil-kt:coil-compose:2.7.0] /home/romark/.gradle/caches/8.13/transforms/a21560782524503666cd6704f3b71c32/transformed/coil-compose-2.7.0/AndroidManifest.xml:5:5-44
 MERGED from [io.coil-kt:coil-compose:2.7.0] /home/romark/.gradle/caches/8.13/transforms/a21560782524503666cd6704f3b71c32/transformed/coil-compose-2.7.0/AndroidManifest.xml:5:5-44
 MERGED from [io.coil-kt:coil-compose-base:2.7.0] /home/romark/.gradle/caches/8.13/transforms/6a46b81671f9d603000d4fb0fe197e7d/transformed/coil-compose-base-2.7.0/AndroidManifest.xml:5:5-44
@@ -661,6 +669,18 @@ ADDED from [androidx.room:room-runtime:2.6.1] /home/romark/.gradle/caches/8.13/t
 		ADDED from [androidx.room:room-runtime:2.6.1] /home/romark/.gradle/caches/8.13/transforms/a56ddd8229a9a20e2a774a08cb869ce4/transformed/room-runtime-2.6.1/AndroidManifest.xml:26:13-43
 	android:name
 		ADDED from [androidx.room:room-runtime:2.6.1] /home/romark/.gradle/caches/8.13/transforms/a56ddd8229a9a20e2a774a08cb869ce4/transformed/room-runtime-2.6.1/AndroidManifest.xml:25:13-74
+uses-library#androidx.window.extensions
+ADDED from [androidx.window:window:1.0.0] /home/romark/.gradle/caches/8.13/transforms/d354ea5c092fe138b1e0ed60d6db28e6/transformed/window-1.0.0/AndroidManifest.xml:25:9-27:40
+	android:required
+		ADDED from [androidx.window:window:1.0.0] /home/romark/.gradle/caches/8.13/transforms/d354ea5c092fe138b1e0ed60d6db28e6/transformed/window-1.0.0/AndroidManifest.xml:27:13-37
+	android:name
+		ADDED from [androidx.window:window:1.0.0] /home/romark/.gradle/caches/8.13/transforms/d354ea5c092fe138b1e0ed60d6db28e6/transformed/window-1.0.0/AndroidManifest.xml:26:13-54
+uses-library#androidx.window.sidecar
+ADDED from [androidx.window:window:1.0.0] /home/romark/.gradle/caches/8.13/transforms/d354ea5c092fe138b1e0ed60d6db28e6/transformed/window-1.0.0/AndroidManifest.xml:28:9-30:40
+	android:required
+		ADDED from [androidx.window:window:1.0.0] /home/romark/.gradle/caches/8.13/transforms/d354ea5c092fe138b1e0ed60d6db28e6/transformed/window-1.0.0/AndroidManifest.xml:30:13-37
+	android:name
+		ADDED from [androidx.window:window:1.0.0] /home/romark/.gradle/caches/8.13/transforms/d354ea5c092fe138b1e0ed60d6db28e6/transformed/window-1.0.0/AndroidManifest.xml:29:13-51
 activity#androidx.activity.ComponentActivity
 ADDED from [androidx.compose.ui:ui-test-manifest:1.6.8] /home/romark/.gradle/caches/8.13/transforms/862e7e0ed91b33dd4132bab184955b67/transformed/ui-test-manifest-1.6.8/AndroidManifest.xml:23:9-25:39
 	android:exported
