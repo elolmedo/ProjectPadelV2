@@ -24,6 +24,7 @@ import es.romsolutions.padeltournament.data.model.Player
 @Composable
 fun AddPlayerDialog(
     authManager: es.romsolutions.padeltournament.auth.AuthManager? = null,
+    analyticsManager: es.romsolutions.padeltournament.analytics.AnalyticsManager? = null,
     onDismiss: () -> Unit,
     onSave: (Player) -> Unit
 ) {
@@ -39,6 +40,7 @@ fun AddPlayerDialog(
     
     val contactLauncher = rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
         if (result.resultCode == Activity.RESULT_OK) {
+            analyticsManager?.logPlayerCreated("contacts")
             result.data?.data?.let { uri ->
                 try {
                     context.contentResolver.query(
@@ -166,6 +168,7 @@ fun AddPlayerDialog(
                         if(nombre.length<2) { nombreError="Mínimo 2 letras"; ok=false }
                         if(phone.length<9) { phoneError="Mínimo 9 dígitos"; ok=false }
                         if(ok) {
+                            analyticsManager?.logPlayerCreated("manual")
                             onSave(Player(
                                 nombre = nombre, 
                                 phone = phone, 

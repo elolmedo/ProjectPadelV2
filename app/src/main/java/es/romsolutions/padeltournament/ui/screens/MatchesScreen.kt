@@ -30,6 +30,7 @@ fun MatchesScreen(
     playerViewModel: PlayerViewModel,
     initialLeagueId: Int? = null,
     initialTournamentId: Int? = null,
+    analyticsManager: es.romsolutions.padeltournament.analytics.AnalyticsManager,
     onBack: () -> Unit
 ) {
     val matches by leagueViewModel.allMatches.collectAsState()
@@ -171,6 +172,7 @@ fun MatchesScreen(
                                 tournamentViewModel.finishTournament(currentTournament!!)
                             } else {
                                 if (isPozo) {
+                                    analyticsManager.logRoundRotated(filterTournamentId!!, lastRoundCreated + 1)
                                     tournamentViewModel.generateNextPozoRound(filterTournamentId!!) 
                                 } else {
                                     selectedRound = lastRoundCreated + 1

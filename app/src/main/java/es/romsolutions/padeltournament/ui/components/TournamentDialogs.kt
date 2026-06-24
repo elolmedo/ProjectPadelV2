@@ -27,6 +27,7 @@ import java.util.*
 fun AddTournamentDialog(
     playerViewModel: PlayerViewModel,
     authManager: es.romsolutions.padeltournament.auth.AuthManager? = null,
+    analyticsManager: es.romsolutions.padeltournament.analytics.AnalyticsManager? = null,
     initialPlayerIds: List<Int> = emptyList(),
     onDismiss: () -> Unit,
     onSave: (Tournament, List<Int>) -> Unit
@@ -215,6 +216,7 @@ fun AddTournamentDialog(
                     TextButton(onClick = onDismiss) { Text("Cancelar") }
                     Button(onClick = {
                         val cal = Calendar.getInstance().apply { timeInMillis = selectedDate; set(Calendar.HOUR_OF_DAY, startHour); set(Calendar.MINUTE, startMinute) }
+                        analyticsManager?.logTournamentCreated(selectedType, selectedPlayerIds.size, isTeamBased)
                         onSave(
                             Tournament(
                                 name = name, type = selectedType, scoreType = scoreType, numSets = numSets, 

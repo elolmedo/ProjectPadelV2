@@ -24,6 +24,7 @@ import androidx.compose.material3.TabRowDefaults.tabIndicatorOffset
 fun ProfileScreen(
     authManager: AuthManager,
     billingManager: BillingManager,
+    analyticsManager: es.romsolutions.padeltournament.analytics.AnalyticsManager,
     onBack: () -> Unit
 ) {
     var selectedTabIndex by remember { mutableIntStateOf(0) }
@@ -151,7 +152,10 @@ fun ProfileScreen(
 
             if (!isPro) {
                 Button(
-                    onClick = { billingManager.launchBillingFlow(context as Activity) },
+                    onClick = { 
+                        analyticsManager.logUpgradeProClick()
+                        billingManager.launchBillingFlow(context as Activity) 
+                    },
                     modifier = Modifier.fillMaxWidth(),
                     colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.tertiary)
                 ) {

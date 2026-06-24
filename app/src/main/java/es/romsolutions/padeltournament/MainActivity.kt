@@ -43,6 +43,7 @@ import es.romsolutions.padeltournament.ui.theme.ProjectPadelTheme
 import es.romsolutions.padeltournament.ui.viewmodel.*
 import es.romsolutions.padeltournament.auth.AuthManager
 import es.romsolutions.padeltournament.billing.BillingManager
+import es.romsolutions.padeltournament.analytics.AnalyticsManager
 import kotlinx.coroutines.launch
 
 class MainActivity : ComponentActivity() {
@@ -57,6 +58,7 @@ class MainActivity : ComponentActivity() {
 
     private lateinit var authManager: AuthManager
     private lateinit var billingManager: BillingManager
+    private lateinit var analyticsManager: AnalyticsManager
 
     @OptIn(ExperimentalMaterial3WindowSizeClassApi::class, ExperimentalMaterial3Api::class)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -65,6 +67,7 @@ class MainActivity : ComponentActivity() {
         
         authManager = AuthManager(this)
         billingManager = BillingManager(this)
+        analyticsManager = AnalyticsManager(this)
 
         setContent {
             val windowSizeClass = calculateWindowSizeClass(this)
@@ -72,6 +75,10 @@ class MainActivity : ComponentActivity() {
             // Estado para observar si el usuario está logueado
             var isLoggedIn by remember { mutableStateOf(authManager.isUserLoggedIn()) }
             val isProUser by billingManager.isPro.collectAsState()
+            
+            LaunchedEffect(isProUser) {
+                analyticsManager.setUserPro(isProUser)
+            }
             
             LaunchedEffect(Unit) {
                 // Solo pedimos login si NO hay un usuario ya autenticado
@@ -100,10 +107,12 @@ class MainActivity : ComponentActivity() {
 
                     when (currentScreen) {
                         "Main" -> {
+                            analyticsManager.logScreenView("MainScreen")
                             MainScreen(
                                 playerViewModel, leagueViewModel, tournamentViewModel,
                                 authManager = authManager,
                                 isPro = isProUser,
+                                analyticsManager = analyticsManager,
                                 windowWidthSizeClass = windowSizeClass.widthSizeClass,
                                 onTogglePro = { /* Ya no existe el truco */ },
                                 onNavigateToMatches = { leagueId ->
@@ -122,19 +131,23 @@ class MainActivity : ComponentActivity() {
                             )
                         }
                         "Matches" -> {
+                            analyticsManager.logScreenView("MatchesScreen")
                             MatchesScreen(
                                 leagueViewModel = leagueViewModel,
                                 tournamentViewModel = tournamentViewModel,
                                 playerViewModel = playerViewModel,
                                 initialLeagueId = selectedLeagueId,
                                 initialTournamentId = selectedTournamentId,
+                                analyticsManager = analyticsManager,
                                 onBack = { currentScreen = "Main" }
                             )
                         }
                         "Profile" -> {
+                            analyticsManager.logScreenView("ProfileScreen")
                             ProfileScreen(
                                 authManager = authManager,
                                 billingManager = billingManager,
+                                analyticsManager = analyticsManager,
                                 onBack = { currentScreen = "Main" }
                             )
                         }
@@ -153,6 +166,7 @@ fun MainScreen(
     tournamentViewModel: TournamentViewModel,
     authManager: AuthManager,
     isPro: Boolean,
+    analyticsManager: AnalyticsManager,
     windowWidthSizeClass: WindowWidthSizeClass,
     onTogglePro: () -> Unit,
     onNavigateToMatches: (Int?) -> Unit,
@@ -341,12 +355,12 @@ fun MainScreen(
     }
 
     if (showAddPlayerDialog) {
-        AddPlayerDialog(authManager = authManager, onDismiss = { showAddPlayerDialog = false }, onSave = { playerViewModel.insert(it); showAddPlayerDialog = false })
+        AddPlayerDialog(authManager = authManager, analyticsManager = analyticsManager, onDismiss = { showAddPlayerDialog = false }, onSave = { playerViewModel.insert(it); showAddPlayerDialog = false })
     }
     if (showAddLeagueDialog) {
-        AddLeagueDialog(playerViewModel = playerViewModel, authManager = authManager, initialPlayerIds = preselectedPlayerIds, onDismiss = { showAddLeagueDialog = false; preselectedPlayerIds = emptyList() }, onSave = { league, ids -> leagueViewModel.insertLeagueWithPlayers(league, ids); showAddLeagueDialog = false; preselectedPlayerIds = emptyList() })
+        AddLeagueDialog(playerViewModel = playerViewModel, authManager = authManager, analyticsManager = analyticsManager, initialPlayerIds = preselectedPlayerIds, onDismiss = { showAddLeagueDialog = false; preselectedPlayerIds = emptyList() }, onSave = { league, ids -> leagueViewModel.insertLeagueWithPlayers(league, ids); showAddLeagueDialog = false; preselectedPlayerIds = emptyList() })
     }
     if (showAddTournamentDialog) {
-        AddTournamentDialog(playerViewModel = playerViewModel, authManager = authManager, initialPlayerIds = preselectedPlayerIds, onDismiss = { showAddTournamentDialog = false; preselectedPlayerIds = emptyList() }, onSave = { tournament, ids -> tournamentViewModel.insertTournamentWithPlayers(tournament, ids); showAddTournamentDialog = false; preselectedPlayerIds = emptyList() })
+        AddTournamentDialog(playerViewModel = playerViewModel, authManager = authManager, analyticsManager = analyticsManager, initialPlayerIds = preselectedPlayerIds, onDismiss = { showAddTournamentDialog = false; preselectedPlayerIds = emptyList() }, onSave = { tournament, ids -> tournamentViewModel.insertTournamentWithPlayers(tournament, ids); showAddTournamentDialog = false; preselectedPlayerIds = emptyList() })
     }
 }

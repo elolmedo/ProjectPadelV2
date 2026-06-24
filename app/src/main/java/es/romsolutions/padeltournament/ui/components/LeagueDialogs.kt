@@ -29,6 +29,7 @@ import java.util.*
 fun AddLeagueDialog(
     playerViewModel: PlayerViewModel,
     authManager: es.romsolutions.padeltournament.auth.AuthManager? = null,
+    analyticsManager: es.romsolutions.padeltournament.analytics.AnalyticsManager? = null,
     initialPlayerIds: List<Int> = emptyList(),
     onDismiss: () -> Unit,
     onSave: (League, List<Int>) -> Unit
@@ -102,6 +103,7 @@ fun AddLeagueDialog(
                             val totalMatches = if (numTeams > 1) (numTeams * (numTeams - 1)) / 2 else 0
                             val weeks = if (weeklyMatches > 0) Math.ceil(totalMatches.toDouble() / weeklyMatches).toLong() else 0
                             val endDate = selectedDate + (weeks * 7 * 24 * 60 * 60 * 1000)
+                            analyticsManager?.logLeagueCreated(numTeams)
                             onSave(
                                 League(
                                     name = name, 
